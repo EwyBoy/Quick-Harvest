@@ -38,8 +38,12 @@ public interface IHarvestable {
      */
     void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state);
 
+    default boolean isInteratable(PlayerEntity player, ServerWorld world, BlockPos pos) {
+        return world.isBlockLoaded(pos) && world.isBlockModifiable(player, pos) && world.canMineBlockBody(player, pos);
+    }
+
     default void breakIntoInventory(final PlayerEntity player, ServerWorld world, BlockPos pos) {
-        if (world.isBlockLoaded(pos) && world.canMineBlockBody(player, pos)) {
+        if (isInteratable(player, world, pos)) {
             Block.getDrops(world.getBlockState(pos), world, pos, world.getTileEntity(pos)).forEach(drop -> ItemHandlerHelper.giveItemToPlayer(player, drop));
             world.destroyBlock(pos, false);
         } else {
@@ -48,7 +52,7 @@ public interface IHarvestable {
     }
 
     default void replant(PlayerEntity player, ServerWorld world, BlockPos pos, BlockState state) {
-        if (world.isBlockLoaded(pos) && world.canMineBlockBody(player, pos)) {
+        if (isInteratable(player, world, pos)) {
             world.setBlockState(pos, state);
         }
     }

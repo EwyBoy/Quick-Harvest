@@ -1,36 +1,39 @@
 package com.ewyboy.quickharvest.harvester;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public class TallPlantHarvestHandler implements IHarvestable {
+public class KelpHarvestHandler implements IHarvestable {
+
     @Override
     public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return isInteratable(player, world, pos);
+        return isInteratable(player, world, pos); //TODO maybe make this the default
     }
 
     @Override
     public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        BlockPos bottom = pos;
         BlockPos top = pos;
+        BlockPos bottom = pos;
 
-        while (world.getBlockState(bottom.down()).getBlock() == state.getBlock()) {
+        while (isKelp(world.getBlockState(bottom.down()))) {
             bottom = bottom.down();
         }
-        while (world.getBlockState(top.up()).getBlock() == state.getBlock()) {
+        while (isKelp(world.getBlockState(top.up()))) {
             top = top.up();
-        }
-        if (bottom == top) {
-            return;
         }
         while (top.getY() > bottom.getY()) {
             breakIntoInventory(player, world, top);
             top = top.down();
         }
-        replant(player, world, bottom, state.with(BlockStateProperties.AGE_0_15, 0));
+        breakIntoInventory(player, world, bottom);
+        replant(player, world, bottom, Blocks.KELP.getDefaultState());
+    }
+
+    private boolean isKelp(BlockState state) {
+        Block block = state.getBlock();
+        return block instanceof KelpBlock || block instanceof KelpTopBlock;
     }
 }

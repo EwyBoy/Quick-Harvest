@@ -30,6 +30,6 @@ public class DefaultHarvestHandler implements IHarvestable {
     @Override
     public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         breakIntoInventory(player, world, pos);
-        replant(player, world, pos, state.getBlock().getDefaultState().with(ageProperty, this.resetAge));
+        replant(player, world, pos, state.with(ageProperty, this.resetAge));
     }
 }
