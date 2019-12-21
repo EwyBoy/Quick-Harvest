@@ -15,11 +15,6 @@ import java.util.Set;
 
 public class ChorusHarvestManager implements IHarvestable {
     @Override
-    public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return isInteratable(player, world, pos);
-    }
-
-    @Override
     public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
 
         Set<CachedBlockInfo> fruit = new HashSet<>();

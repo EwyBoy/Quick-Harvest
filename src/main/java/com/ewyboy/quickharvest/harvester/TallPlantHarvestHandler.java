@@ -9,11 +9,6 @@ import net.minecraft.world.server.ServerWorld;
 
 public class TallPlantHarvestHandler implements IHarvestable {
     @Override
-    public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return isInteratable(player, world, pos);
-    }
-
-    @Override
     public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         BlockPos bottom = pos;
         BlockPos top = pos;

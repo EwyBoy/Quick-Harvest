@@ -7,12 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
 public class KelpHarvestHandler implements IHarvestable {
-
-    @Override
-    public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return isInteratable(player, world, pos); //TODO maybe make this the default
-    }
-
     @Override
     public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         BlockPos top = pos;

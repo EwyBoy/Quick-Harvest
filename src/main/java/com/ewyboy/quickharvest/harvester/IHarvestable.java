@@ -25,7 +25,9 @@ public interface IHarvestable {
      * @param state  The crop's state
      * @return true if the crop is currently harvestable
      */
-    boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state);
+    default boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+        return isInteratable(player, world, pos);
+    }
 
     /**
      * Uses ServerWorld as the server is what should be handling this, and it makes using {@link Block#getDrops} easier
