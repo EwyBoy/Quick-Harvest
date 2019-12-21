@@ -18,7 +18,6 @@ public class ChorusHarvestManager implements IHarvestable {
     public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
 
         Set<CachedBlockInfo> fruit = new HashSet<>();
-        Set<CachedBlockInfo> plant = new HashSet<>();
         BlockPos lowestPoint = pos;
 
         Set<BlockPos> visited = new HashSet<>();
@@ -40,9 +39,7 @@ public class ChorusHarvestManager implements IHarvestable {
             Block qBlock = qState.getBlock();
             if (qBlock instanceof ChorusFlowerBlock) {
                 fruit.add(qInfo);
-            } else if (qBlock instanceof ChorusPlantBlock) {
-                plant.add(qInfo);
-            } else {
+            } else if (!(qBlock instanceof ChorusPlantBlock)) {
                 continue;
             }
 
@@ -59,7 +56,6 @@ public class ChorusHarvestManager implements IHarvestable {
             }
         }
         fruit.forEach(info -> breakIntoInventory(player, world, info.getPos()));
-//        plant.forEach(info -> breakIntoInventory(player, world, info.getPos()));
         breakIntoInventory(player, world, lowestPoint.up());
         replant(player, world, lowestPoint, Blocks.CHORUS_FLOWER.getDefaultState());
     }

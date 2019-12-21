@@ -10,6 +10,7 @@ public class HarvestManager {
     public static final Map<Block, IHarvestable> HARVEST_HANDLER_MAP = new HashMap<>();
 
     static {
+        // TODO maybe move the HARVEST_HANDLER_MAP to use a Predicate<Block> to remove duplicate entries
         // Default plant handlers
         HARVEST_HANDLER_MAP.put(Blocks.WHEAT, new DefaultHarvestHandler(CropsBlock.AGE));
         HARVEST_HANDLER_MAP.put(Blocks.CARROTS, new DefaultHarvestHandler(CarrotBlock.AGE));
@@ -33,6 +34,9 @@ public class HarvestManager {
         HARVEST_HANDLER_MAP.put(Blocks.CHORUS_PLANT, new ChorusHarvestManager());
 
         // TODO Huge Mushrooms
+        HARVEST_HANDLER_MAP.put(Blocks.BROWN_MUSHROOM_BLOCK, new HugeMushroomHarvestHandler());
+        HARVEST_HANDLER_MAP.put(Blocks.RED_MUSHROOM_BLOCK, new HugeMushroomHarvestHandler());
+        HARVEST_HANDLER_MAP.put(Blocks.MUSHROOM_STEM, new HugeMushroomHarvestHandler());
 
         // Kelp plant handler
         HARVEST_HANDLER_MAP.put(Blocks.KELP, new KelpHarvestHandler());
