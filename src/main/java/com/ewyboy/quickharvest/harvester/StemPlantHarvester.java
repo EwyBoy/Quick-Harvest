@@ -4,15 +4,15 @@ import net.minecraft.block.AttachedStemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StemGrownBlock;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public class StemPlantHarvestHandler implements IHarvestable {
+public class StemPlantHarvester implements IHarvester {
     @Override
-    public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+    public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         Block block = state.getBlock();
 
         if (block instanceof AttachedStemBlock) return true;
@@ -29,7 +29,7 @@ public class StemPlantHarvestHandler implements IHarvestable {
     }
 
     @Override
-    public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+    public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         Block block = state.getBlock();
         if (block instanceof AttachedStemBlock) {
             breakIntoInventory(player, world, pos.offset(state.get(AttachedStemBlock.FACING)));

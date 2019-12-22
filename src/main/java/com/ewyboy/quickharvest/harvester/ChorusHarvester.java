@@ -1,7 +1,7 @@
 package com.ewyboy.quickharvest.harvester;
 
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.CachedBlockInfo;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -13,9 +13,9 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ChorusHarvestManager implements IHarvestable {
+public class ChorusHarvester implements IHarvester {
     @Override
-    public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+    public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
 
         Set<CachedBlockInfo> fruit = new HashSet<>();
         BlockPos lowestPoint = pos;

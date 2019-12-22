@@ -1,14 +1,14 @@
 package com.ewyboy.quickharvest.harvester;
 
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public class KelpHarvestHandler implements IHarvestable {
+public class KelpHarvester implements IHarvester {
     @Override
-    public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+    public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         BlockPos top = pos;
         BlockPos bottom = pos;
 

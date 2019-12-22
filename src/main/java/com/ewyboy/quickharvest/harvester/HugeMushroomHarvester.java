@@ -2,6 +2,7 @@ package com.ewyboy.quickharvest.harvester;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.CachedBlockInfo;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -14,15 +15,15 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HugeMushroomHarvestHandler implements IHarvestable {
+public class HugeMushroomHarvester implements IHarvester {
 
     @Override
-    public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+    public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         return isInteratable(player, world, pos) && world.getBlockState(pos.down()).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.BROWN_MUSHROOM);
     }
 
     @Override
-    public void harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+    public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         Set<CachedBlockInfo> shrooms = new HashSet<>();
         BlockPos lowestPos = pos;
         Color color = Color.NONE;

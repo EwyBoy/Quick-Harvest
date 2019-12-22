@@ -1,23 +1,40 @@
 package com.ewyboy.quickharvest.config;
 
+import com.ewyboy.quickharvest.QuickHarvest;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Config {
 
+    public static final ForgeConfigSpec settingSpec;
+    public static final Settings SETTINGS;
+
+    static {
+        final Pair<Settings, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Settings::new);
+        settingSpec = specPair.getRight();
+        SETTINGS = specPair.getLeft();
+    }
+
     public static class Settings {
+        private final BooleanValue requiresTool;
 
         Settings(ForgeConfigSpec.Builder builder) {
-            builder.comment("Config file for Quick Harvest").push("SETTINGS");
+            builder.comment("Config file for Quick Harvest")
+                    .push("general");
+
+            requiresTool = builder.comment("If set to true, this will require a player to be holding a hoe to quick harvest.")
+                    .translation(key("requiresTool"))
+                    .define("requiresTool", false);
+
         }
 
-        public static final ForgeConfigSpec settingSpec;
-        public static final Settings SETTINGS;
+        public boolean requiresTool() {
+            return requiresTool.get();
+        }
 
-        static {
-            final Pair<Settings, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Settings :: new);
-            settingSpec = specPair.getRight();
-            SETTINGS = specPair.getLeft();
+        private String key(String key) {
+            return String.format("%s.config.%s", QuickHarvest.ID, key);
         }
     }
 }
