@@ -1,129 +1,100 @@
 package com.ewyboy.quickharvest.harvester;
 
-import com.ewyboy.quickharvest.api.IHarvester;
-import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
+import com.ewyboy.quickharvest.QuickHarvest;
+import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.util.FloodFill;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.HugeMushroomBlock;
+import net.minecraft.block.SixWayBlock;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.CachedBlockInfo;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.Tags;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.function.Predicate;
 
-public class HugeMushroomHarvester implements IHarvester {
+public class HugeMushroomHarvester extends HarvesterImpl {
+    private static final Predicate<BlockState> IS_BROWN_MUSHROOM = s -> s.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK;
+    private static final Predicate<BlockState> IS_RED_MUSHROOM = s -> s.getBlock() == Blocks.RED_MUSHROOM_BLOCK;
+    private static final Predicate<BlockState> IS_MUSHROOM_STEM = s -> s.getBlock() == Blocks.MUSHROOM_STEM;
+    private static final Predicate<BlockState> IS_MUSHROOM = IS_BROWN_MUSHROOM.or(IS_RED_MUSHROOM).or(IS_MUSHROOM_STEM);
+
+    public HugeMushroomHarvester() {
+        super(QuickHarvest.AXE_TAG);
+    }
 
     @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return isInteractable(player, world, pos) && world.getBlockState(pos.down()).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.BROWN_MUSHROOM);
+        return isBlockModifiable(player, world, pos) && world.getBlockState(pos.down()).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.RED_MUSHROOM);
     }
 
     @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        Set<CachedBlockInfo> shrooms = new HashSet<>();
-        BlockPos lowestPos = pos;
-        Color color = Color.NONE;
+        FloodFill floodFill = new FloodFill(pos,
+                s -> IS_MUSHROOM.test(s) ? Arrays.stream(Direction.values())
+                        .filter(off -> !s.get(SixWayBlock.FACING_TO_PROPERTY_MAP.get(off)))
+                        .toArray(Direction[]::new) : NO_DIRECTIONS,
+                ImmutableSet.of(IS_MUSHROOM, IS_RED_MUSHROOM)
+        );
+        floodFill.search(world);
 
-        //TODO Unify duplicated code here
-        Set<BlockPos> visited = new HashSet<>();
-        Deque<BlockPos> toVisit = new ArrayDeque<BlockPos>() {
-            @Override
-            public void push(BlockPos blockPos) {
-                super.push(blockPos);
-                visited.add(blockPos);
-            }
-        };
-        toVisit.add(pos);
-
-        while (!toVisit.isEmpty()) {
-            BlockPos q = toVisit.pollLast();
-            CachedBlockInfo qInfo = new CachedBlockInfo(world, q, false);
-            BlockState qState = qInfo.getBlockState();
-            if (qState == null) {
-                continue; // Block not loaded
-            }
-
-            Block qBlock = qState.getBlock();
-            if (qBlock == Blocks.MUSHROOM_STEM) {
-                // NOOP
-            } else if (qBlock == Blocks.BROWN_MUSHROOM_BLOCK) {
-                if (color == Color.NONE) {
-                    color = Color.BROWN;
+        // Handle non adjacent red mushroom cap sides
+        if (!floodFill.getFoundTargets().get(IS_RED_MUSHROOM).isEmpty()) {
+            for (Direction horzOff : Direction.Plane.HORIZONTAL) {
+                BlockPos offset = floodFill.getLowestPoint().offset(horzOff, 2).up();
+                BlockState offsetState = world.getBlockState(offset);
+                while (!(offsetState.getBlock() instanceof HugeMushroomBlock) && offset.getY() < floodFill.getLowestPoint().getY() + 10) {
+                    offset = offset.up();
+                    offsetState = world.getBlockState(offset);
                 }
-            } else if (qBlock == Blocks.RED_MUSHROOM_BLOCK) {
-                if (color == Color.NONE) {
-                    color = Color.RED;
+                if (IS_MUSHROOM_STEM.test(state)) {
+                    FloodFill newFill = new FloodFill(offset,
+                            s -> IS_RED_MUSHROOM.test(s) ? Direction.values() : NO_DIRECTIONS,
+                            ImmutableSet.of(IS_MUSHROOM)
+                    );
+                    newFill.search(world);
+                    floodFill.add(newFill);
                 }
-            } else {
-                continue;
             }
-
-            for (Direction off : Direction.values()) {
-                BlockPos next = q.offset(off);
-                if (qState.get(SixWayBlock.FACING_TO_PROPERTY_MAP.get(off)) || visited.contains(next)) {
-                    continue;
-                }
-                toVisit.push(next);
-            }
-
-            if (q.getY() < lowestPos.getY()) {
-                lowestPos = q;
-            }
-
-            shrooms.add(qInfo);
         }
 
-        switch (color) {
-            case BROWN:
-                shrooms.forEach(info -> breakIntoInventory(player, world, info.getPos()));
-                replant(player, world, lowestPos, Blocks.BROWN_MUSHROOM.getDefaultState());
-                break;
-            case RED:
-                findRedSides(player, world, lowestPos, shrooms, visited, toVisit);
-                shrooms.forEach(info -> breakIntoInventory(player, world, info.getPos()));
-                replant(player, world, lowestPos, Blocks.RED_MUSHROOM.getDefaultState());
-                break;
-            default:
-            case NONE:
-                break;
-        }
+        NonNullList<ItemStack> drops = NonNullList.create();
+        floodFill.getFoundTargets().get(IS_MUSHROOM).forEach(info -> breakBlock(player, world, info.getPos(), drops));
+        replant(player, world, floodFill.getLowestPoint(), drops);
+        drops.forEach(drop -> giveItemToPlayer(player, drop));
     }
 
-    private void findRedSides(PlayerEntity player, ServerWorld world, BlockPos lowestPos, Set<CachedBlockInfo> shrooms, Set<BlockPos> visited, Deque<BlockPos> toVisit) {
-        for (Direction horzOff : Direction.Plane.HORIZONTAL) {
-            BlockPos offset = lowestPos.offset(horzOff, 2);
-            while (world.isAirBlock(offset.up()) && offset.getY() < lowestPos.getY() + 10) {
-                offset = offset.up();
+    @Override
+    public ItemStack takeReplantable(NonNullList<ItemStack> drops) {
+        for (ItemStack stack : drops) {
+            if (Tags.Items.MUSHROOMS.contains(stack.getItem()) && stack.getCount() >= 1) {
+                ItemStack ret = stack.copy();
+                stack.shrink(1);
+                ret.setCount(1);
+                return ret;
             }
-            toVisit.add(offset.up());
         }
-
-        while (!toVisit.isEmpty()) {
-            BlockPos q = toVisit.pollLast();
-            CachedBlockInfo qInfo = new CachedBlockInfo(world, q, false);
-            BlockState qState = qInfo.getBlockState();
-            if (qState == null || !(qState.getBlock() instanceof HugeMushroomBlock)) {
-                continue; // Block not loaded
-            }
-
-            for (Direction off : Direction.values()) {
-                BlockPos next = q.offset(off);
-                if (qState.get(SixWayBlock.FACING_TO_PROPERTY_MAP.get(off)) || visited.contains(next)) {
-                    continue;
-                }
-                toVisit.push(next);
-            }
-
-            shrooms.add(qInfo);
-        }
+        return ItemStack.EMPTY;
     }
 
-    private enum Color {
-        NONE, BROWN, RED
+    @Override
+    public boolean replant(ServerPlayerEntity player, ServerWorld world, BlockPos pos, NonNullList<ItemStack> drops) {
+        if (holdingValidTool(player)) {
+            ItemStack itemStack = takeReplantable(drops);
+            if (!itemStack.isEmpty()) {
+                world.setBlockState(pos, ((BlockItem) itemStack.getItem()).getBlock().getDefaultState());
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -4,6 +4,7 @@ import com.ewyboy.quickharvest.harvester.*;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,14 +20,11 @@ import java.util.function.Predicate;
 
 public class HarvestManager {
 
-    //TODO Hack loottables to remove seed / crop dupes
-
     public static void onBlockQuickHarvest(final PlayerInteractEvent.RightClickBlock event) {
         final World world = event.getWorld();
         final PlayerEntity player = event.getPlayer();
 
-        if (world instanceof ServerWorld) {
-
+        if (event.getUseBlock() != Event.Result.DENY && event.getUseItem() != Event.Result.DENY && world instanceof ServerWorld) {
             final ServerWorld serverWorld = (ServerWorld) world;
             final BlockPos pos = event.getPos();
             final BlockState state = event.getWorld().getBlockState(pos);
@@ -34,13 +32,13 @@ public class HarvestManager {
             final Hand hand = event.getHand();
 
             getHarvesterFor(state)
-                .filter(harvester -> harvester.canHarvest(serverPlayer, hand, serverWorld, pos, state))
-                .ifPresent(harvester -> {
-                    harvester.harvest(serverPlayer, hand, serverWorld, pos, state);
-                    event.setUseBlock(Event.Result.DENY);
-                    event.setUseItem(Event.Result.DENY);
-                    event.setCanceled(true);
-                })
+                    .filter(harvester -> harvester.canHarvest(serverPlayer, hand, serverWorld, pos, state))
+                    .ifPresent(harvester -> {
+                        harvester.harvest(serverPlayer, hand, serverWorld, pos, state);
+                        event.setUseBlock(Event.Result.DENY);
+                        event.setUseItem(Event.Result.DENY);
+                        event.setCanceled(true);
+                    })
             ;
         }
     }
@@ -53,12 +51,12 @@ public class HarvestManager {
 
     static {
         // Register vanilla harvesters
-        register(new DefaultHarvester(CropsBlock.AGE), Blocks.WHEAT);
-        register(new DefaultHarvester(CarrotBlock.AGE), Blocks.CARROTS);
-        register(new DefaultHarvester(PotatoBlock.AGE), Blocks.POTATOES);
-        register(new DefaultHarvester(BeetrootBlock.BEETROOT_AGE), Blocks.BEETROOTS);
-        register(new DefaultHarvester(NetherWartBlock.AGE), Blocks.NETHER_WART);
-        register(new DefaultHarvester(CocoaBlock.AGE), Blocks.COCOA);
+        register(new DefaultHarvester(Items.WHEAT_SEEDS, Blocks.WHEAT.getDefaultState(), CropsBlock.AGE), Blocks.WHEAT);
+        register(new DefaultHarvester(Items.CARROT, Blocks.CARROTS.getDefaultState(), CarrotBlock.AGE), Blocks.CARROTS);
+        register(new DefaultHarvester(Items.POTATO, Blocks.POTATOES.getDefaultState(), PotatoBlock.AGE), Blocks.POTATOES);
+        register(new DefaultHarvester(Items.BEETROOT_SEEDS, Blocks.BEETROOTS.getDefaultState(), BeetrootBlock.BEETROOT_AGE), Blocks.BEETROOTS);
+        register(new DefaultHarvester(Items.NETHER_WART, Blocks.NETHER_WART.getDefaultState(), NetherWartBlock.AGE), Blocks.NETHER_WART);
+        register(new DefaultHarvester(Items.COCOA_BEANS, Blocks.COCOA.getDefaultState(), CocoaBlock.AGE), Blocks.COCOA);
         register(new StemPlantHarvester(), Blocks.ATTACHED_MELON_STEM, Blocks.MELON);
         register(new StemPlantHarvester(), Blocks.ATTACHED_PUMPKIN_STEM, Blocks.PUMPKIN);
         register(new TallPlantHarvester(), Blocks.SUGAR_CANE, Blocks.CACTUS);
@@ -73,11 +71,11 @@ public class HarvestManager {
 
     private static Optional<IHarvester> getHarvesterFor(Block block) {
         return HARVEST_HANDLER_MAP.keySet()
-            .stream()
-            .filter(predicate -> predicate.test(block))
-            .map(HARVEST_HANDLER_MAP::get)
-            .findFirst()
-        ;
+                .stream()
+                .filter(predicate -> predicate.test(block))
+                .map(HARVEST_HANDLER_MAP::get)
+                .findFirst()
+                ;
     }
 
     private static class BlockPredicate implements Predicate<Block> {

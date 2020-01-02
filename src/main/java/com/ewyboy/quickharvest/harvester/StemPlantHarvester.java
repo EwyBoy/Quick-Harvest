@@ -1,17 +1,25 @@
 package com.ewyboy.quickharvest.harvester;
 
-import com.ewyboy.quickharvest.api.IHarvester;
+import com.ewyboy.quickharvest.QuickHarvest;
+import com.ewyboy.quickharvest.api.HarvesterImpl;
 import net.minecraft.block.AttachedStemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StemGrownBlock;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public class StemPlantHarvester implements IHarvester {
+public class StemPlantHarvester extends HarvesterImpl {
+
+    public StemPlantHarvester() {
+        super(QuickHarvest.AXE_TAG);
+    }
+
     @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         Block block = state.getBlock();
@@ -31,11 +39,13 @@ public class StemPlantHarvester implements IHarvester {
 
     @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+        NonNullList<ItemStack> drops = NonNullList.create();
         Block block = state.getBlock();
         if (block instanceof AttachedStemBlock) {
-            breakIntoInventory(player, world, pos.offset(state.get(AttachedStemBlock.FACING)));
+            breakBlock(player, world, pos.offset(state.get(AttachedStemBlock.FACING)), drops);
         } else if (block instanceof StemGrownBlock) {
-            breakIntoInventory(player, world, pos);
+            breakBlock(player, world, pos, drops);
         }
+        drops.forEach(drop -> giveItemToPlayer(player, drop));
     }
 }

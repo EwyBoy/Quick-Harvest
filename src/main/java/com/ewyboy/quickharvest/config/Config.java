@@ -39,5 +39,9 @@ public class Config {
         private String key(String key) {
             return String.format("%s.config.%s", QuickHarvest.ID, key);
         }
+
+        public boolean damagesTool() {
+            return false; // TODO: add
+        }
     }
 }
