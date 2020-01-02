@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class HugeMushroomHarvester extends HarvesterImpl {
+
     private static final Predicate<BlockState> IS_BROWN_MUSHROOM = s -> s.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK;
     private static final Predicate<BlockState> IS_RED_MUSHROOM = s -> s.getBlock() == Blocks.RED_MUSHROOM_BLOCK;
     private static final Predicate<BlockState> IS_MUSHROOM_STEM = s -> s.getBlock() == Blocks.MUSHROOM_STEM;
@@ -42,7 +43,7 @@ public class HugeMushroomHarvester extends HarvesterImpl {
         FloodFill floodFill = new FloodFill(pos,
                 s -> IS_MUSHROOM.test(s) ? Arrays.stream(Direction.values())
                         .filter(off -> !s.get(SixWayBlock.FACING_TO_PROPERTY_MAP.get(off)))
-                        .toArray(Direction[]::new) : NO_DIRECTIONS,
+                        .toArray(Direction[] :: new) : NO_DIRECTIONS,
                 ImmutableSet.of(IS_MUSHROOM, IS_RED_MUSHROOM)
         );
         floodFill.search(world);
