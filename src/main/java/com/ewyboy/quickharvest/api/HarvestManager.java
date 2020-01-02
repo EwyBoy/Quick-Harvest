@@ -18,6 +18,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/**
+ * This is where you register harvesters.
+ */
 public class HarvestManager {
 
     public static void onBlockQuickHarvest(final PlayerInteractEvent.RightClickBlock event) {
