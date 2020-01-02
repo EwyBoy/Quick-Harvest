@@ -19,7 +19,7 @@ public class QuickHarvest {
     public static final Tag<Item> HOE_TAG = new ItemTags.Wrapper(new ResourceLocation("forge", "tools/hoe"));
 
     public QuickHarvest() {
-        MinecraftForge.EVENT_BUS.addListener(HarvestManager::onBlockQuickHarvest);
+        MinecraftForge.EVENT_BUS.addListener(HarvestManager :: onBlockQuickHarvest);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.settingSpec);
     }
 }

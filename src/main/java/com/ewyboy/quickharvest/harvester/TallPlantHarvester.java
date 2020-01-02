@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.function.Predicate;
 
 public class TallPlantHarvester extends HarvesterImpl {
+
     @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         final Predicate<BlockState> isSame = s -> s.getBlock() == state.getBlock();

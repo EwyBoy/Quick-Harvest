@@ -26,10 +26,12 @@ import java.util.function.BooleanSupplier;
  * This is what you extend if you need to add specialized harvesters for your crops.
  */
 public abstract class HarvesterImpl implements IHarvester {
+
     public static final String HARVEST_ERROR_PROTECTED_KEY = QuickHarvest.ID + ".message.error.protected";
     protected static final Direction[] NO_DIRECTIONS = new Direction[0];
-    private static BooleanSupplier requiresTool = Config.SETTINGS::requiresTool;
-    private static BooleanSupplier damagesTool = Config.SETTINGS::damagesTool;
+
+    private static BooleanSupplier requiresTool = Config.SETTINGS :: requiresTool;
+    private static BooleanSupplier damagesTool = Config.SETTINGS :: damagesTool;
     private final Tag<Item> validTool;
     private final ItemStack replant;
     private final BlockState replantState;

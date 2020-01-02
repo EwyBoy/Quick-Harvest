@@ -6,10 +6,10 @@ issueTrackerURL="https://github.com/EwyBoy/Quick-Harvest/issues"
 modId="quickharvest"
 displayName="Quick Harvest"
 version="${file.jarVersion}"
-authors="Ewy"
+authors="Ewy, LuHeGi"
 credits=""
 description='''
-Harvest crops by right-clicking
+Quick Harvest any crop or plant by right-clicking
 '''
 
 [[dependencies.quickharvest]]

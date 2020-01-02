@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.function.Predicate;
 
 public class KelpHarvester extends HarvesterImpl {
+
     private static final Predicate<BlockState> IS_KELP_BLOCK = s -> s.getBlock() instanceof KelpBlock;
     private static final Predicate<BlockState> IS_KELP_TOP = s -> s.getBlock() instanceof KelpTopBlock;
     private static final Predicate<BlockState> IS_KELP = IS_KELP_BLOCK.or(IS_KELP_TOP);

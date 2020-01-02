@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class FloodFill {
+
     private final Function<BlockState, Iterable<Direction>> stateSearchMapper;
     private final Map<Predicate<BlockState>, Set<CachedBlockInfo>> foundTargets;
     private final Deque<BlockPos> toVisit;
@@ -41,7 +42,7 @@ public class FloodFill {
             final BlockPos pos = toVisit.pollLast();
             final CachedBlockInfo blockInfo = new CachedBlockInfo(world, pos, false);
             final BlockState blockState = blockInfo.getBlockState();
-            if (blockState == null) continue; // this means the block is not loadable
+            if (blockState == null) continue; // if the block is not loadable
             // Add neighbours to search list
             stateSearchMapper.apply(blockState).forEach(offset -> toVisit.push(pos.offset(offset)));
             // Add this block to any of the target lists it matches.

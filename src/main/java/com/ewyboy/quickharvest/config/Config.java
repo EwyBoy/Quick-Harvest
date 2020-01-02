@@ -11,13 +11,11 @@ public class Config {
     public static final Settings SETTINGS;
 
     static {
-        final Pair<Settings, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Settings::new);
+        final Pair<Settings, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Settings :: new);
         settingSpec = specPair.getRight();
         SETTINGS = specPair.getLeft();
     }
 
-    // TODO Disable individual Harvesters
-    // TODO Maybe generate these options based on registered harvesters
     public static class Settings {
 
         private final BooleanValue requiresTool;

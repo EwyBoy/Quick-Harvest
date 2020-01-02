@@ -19,6 +19,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.function.Predicate;
 
 public class ChorusHarvester extends HarvesterImpl {
+
     private static final Predicate<BlockState> fruit = s -> s.getBlock() instanceof ChorusFlowerBlock;
     private static final Predicate<BlockState> notFruit = s -> s.getBlock() instanceof ChorusPlantBlock;
 

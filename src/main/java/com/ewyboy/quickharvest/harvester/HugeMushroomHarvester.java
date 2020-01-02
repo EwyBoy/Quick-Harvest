@@ -47,10 +47,10 @@ public class HugeMushroomHarvester extends HarvesterImpl {
         );
         floodFill.search(world);
 
-        // Handle non adjacent red mushroom cap sides
+        // Handle non-adjacent red mushroom cap sides
         if (!floodFill.getFoundTargets().get(IS_RED_MUSHROOM).isEmpty()) {
-            for (Direction horzOff : Direction.Plane.HORIZONTAL) {
-                BlockPos offset = floodFill.getLowestPoint().offset(horzOff, 2).up();
+            for (Direction horizOff : Direction.Plane.HORIZONTAL) {
+                BlockPos offset = floodFill.getLowestPoint().offset(horizOff, 2).up();
                 BlockState offsetState = world.getBlockState(offset);
                 while (!(offsetState.getBlock() instanceof HugeMushroomBlock) && offset.getY() < floodFill.getLowestPoint().getY() + 10) {
                     offset = offset.up();
