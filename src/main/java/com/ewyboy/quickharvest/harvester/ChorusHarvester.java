@@ -1,5 +1,6 @@
 package com.ewyboy.quickharvest.harvester;
 
+import com.ewyboy.quickharvest.api.IHarvester;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.CachedBlockInfo;
@@ -14,12 +15,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ChorusHarvester implements IHarvester {
+
     @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
 
         Set<CachedBlockInfo> fruit = new HashSet<>();
         BlockPos lowestPoint = pos;
 
+        //TODO Unify duplicated code here
         Set<BlockPos> visited = new HashSet<>();
         Deque<BlockPos> toVisit = new ArrayDeque<BlockPos>() {
             @Override
@@ -33,10 +36,13 @@ public class ChorusHarvester implements IHarvester {
             BlockPos q = toVisit.pollLast();
             CachedBlockInfo qInfo = new CachedBlockInfo(world, q, false);
             BlockState qState = qInfo.getBlockState();
+
             if (state == null) {
                 continue;
             }
+
             Block qBlock = qState.getBlock();
+
             if (qBlock instanceof ChorusFlowerBlock) {
                 fruit.add(qInfo);
             } else if (!(qBlock instanceof ChorusPlantBlock)) {

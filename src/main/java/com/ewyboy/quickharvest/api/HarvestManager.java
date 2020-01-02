@@ -1,4 +1,4 @@
-package com.ewyboy.quickharvest;
+package com.ewyboy.quickharvest.api;
 
 import com.ewyboy.quickharvest.harvester.*;
 import net.minecraft.block.*;
@@ -19,10 +19,14 @@ import java.util.function.Predicate;
 
 public class HarvestManager {
 
+    //TODO Hack loottables to remove seed / crop dupes
+
     public static void onBlockQuickHarvest(final PlayerInteractEvent.RightClickBlock event) {
         final World world = event.getWorld();
         final PlayerEntity player = event.getPlayer();
+
         if (world instanceof ServerWorld) {
+
             final ServerWorld serverWorld = (ServerWorld) world;
             final BlockPos pos = event.getPos();
             final BlockState state = event.getWorld().getBlockState(pos);
@@ -30,13 +34,14 @@ public class HarvestManager {
             final Hand hand = event.getHand();
 
             getHarvesterFor(state)
-                    .filter(harvester -> harvester.canHarvest(serverPlayer, hand, serverWorld, pos, state))
-                    .ifPresent(harvester -> {
-                        harvester.harvest(serverPlayer, hand, serverWorld, pos, state);
-                        event.setUseBlock(Event.Result.DENY);
-                        event.setUseItem(Event.Result.DENY);
-                        event.setCanceled(true);
-                    });
+                .filter(harvester -> harvester.canHarvest(serverPlayer, hand, serverWorld, pos, state))
+                .ifPresent(harvester -> {
+                    harvester.harvest(serverPlayer, hand, serverWorld, pos, state);
+                    event.setUseBlock(Event.Result.DENY);
+                    event.setUseItem(Event.Result.DENY);
+                    event.setCanceled(true);
+                })
+            ;
         }
     }
 
@@ -68,10 +73,11 @@ public class HarvestManager {
 
     private static Optional<IHarvester> getHarvesterFor(Block block) {
         return HARVEST_HANDLER_MAP.keySet()
-                .stream()
-                .filter(predicate -> predicate.test(block))
-                .map(HARVEST_HANDLER_MAP::get)
-                .findFirst();
+            .stream()
+            .filter(predicate -> predicate.test(block))
+            .map(HARVEST_HANDLER_MAP::get)
+            .findFirst()
+        ;
     }
 
     private static class BlockPredicate implements Predicate<Block> {

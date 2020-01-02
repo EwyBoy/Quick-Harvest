@@ -1,5 +1,6 @@
 package com.ewyboy.quickharvest.harvester;
 
+import com.ewyboy.quickharvest.api.IHarvester;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -8,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
 public class TallPlantHarvester implements IHarvester {
+
     @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         BlockPos bottom = pos;

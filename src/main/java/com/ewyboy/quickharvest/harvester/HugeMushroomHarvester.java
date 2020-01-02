@@ -1,5 +1,6 @@
 package com.ewyboy.quickharvest.harvester;
 
+import com.ewyboy.quickharvest.api.IHarvester;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -19,7 +20,7 @@ public class HugeMushroomHarvester implements IHarvester {
 
     @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return isInteratable(player, world, pos) && world.getBlockState(pos.down()).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.BROWN_MUSHROOM);
+        return isInteractable(player, world, pos) && world.getBlockState(pos.down()).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.BROWN_MUSHROOM);
     }
 
     @Override
@@ -28,6 +29,7 @@ public class HugeMushroomHarvester implements IHarvester {
         BlockPos lowestPos = pos;
         Color color = Color.NONE;
 
+        //TODO Unify duplicated code here
         Set<BlockPos> visited = new HashSet<>();
         Deque<BlockPos> toVisit = new ArrayDeque<BlockPos>() {
             @Override

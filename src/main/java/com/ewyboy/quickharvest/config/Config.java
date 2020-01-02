@@ -16,17 +16,20 @@ public class Config {
         SETTINGS = specPair.getLeft();
     }
 
+    // TODO Disable individual Harvesters
+    // TODO Maybe generate these options based on registered harvesters
     public static class Settings {
+
         private final BooleanValue requiresTool;
 
         Settings(ForgeConfigSpec.Builder builder) {
             builder.comment("Config file for Quick Harvest")
-                    .push("general");
-
+                    .push("general")
+            ;
             requiresTool = builder.comment("If set to true, this will require a player to be holding a hoe to quick harvest.")
                     .translation(key("requiresTool"))
-                    .define("requiresTool", false);
-
+                    .define("requiresTool", false)
+            ;
         }
 
         public boolean requiresTool() {

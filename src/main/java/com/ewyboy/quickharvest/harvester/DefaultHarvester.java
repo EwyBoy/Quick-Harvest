@@ -1,5 +1,6 @@
 package com.ewyboy.quickharvest.harvester;
 
+import com.ewyboy.quickharvest.api.IHarvester;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.state.IntegerProperty;
@@ -8,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
 public class DefaultHarvester implements IHarvester {
+
     private final IntegerProperty ageProperty;
     private final int maxAge;
     private final int resetAge;

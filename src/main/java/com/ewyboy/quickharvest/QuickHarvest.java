@@ -1,5 +1,6 @@
 package com.ewyboy.quickharvest;
 
+import com.ewyboy.quickharvest.api.HarvestManager;
 import com.ewyboy.quickharvest.config.Config;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;

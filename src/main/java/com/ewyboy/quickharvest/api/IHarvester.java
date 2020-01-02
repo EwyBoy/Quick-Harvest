@@ -1,6 +1,5 @@
-package com.ewyboy.quickharvest.harvester;
+package com.ewyboy.quickharvest.api;
 
-import com.ewyboy.quickharvest.HarvestManager;
 import com.ewyboy.quickharvest.QuickHarvest;
 import com.ewyboy.quickharvest.config.Config;
 import net.minecraft.block.Block;
@@ -19,6 +18,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  * An interface for adding right click harvest functionality. Make sure you register whatever is implementing this to the {@link HarvestManager}
  */
 public interface IHarvester {
+
     String HARVEST_ERROR_PROTECTED_KEY = QuickHarvest.ID + ".message.error.protected";
 
     /**
@@ -32,7 +32,7 @@ public interface IHarvester {
      * @return true if the crop is currently harvestable
      */
     default boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return isInteratable(player, world, pos);
+        return isInteractable(player, world, pos);
     }
 
     /**
@@ -46,7 +46,7 @@ public interface IHarvester {
      */
     void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state);
 
-    default boolean isInteratable(PlayerEntity player, ServerWorld world, BlockPos pos) {
+    default boolean isInteractable(PlayerEntity player, ServerWorld world, BlockPos pos) {
         return world.isBlockLoaded(pos) && world.isBlockModifiable(player, pos) && world.canMineBlockBody(player, pos);
     }
 
@@ -55,7 +55,7 @@ public interface IHarvester {
         if (requiresTool() && !(hoe.getItem() instanceof HoeItem)) {
             return;
         }
-        if (isInteratable(player, world, pos)) {
+        if (isInteractable(player, world, pos)) {
             if (requiresTool() && !damageTool(player, hoe, 1)) {
                 return;
             }
@@ -71,7 +71,7 @@ public interface IHarvester {
         if (requiresTool() && !(hoe.getItem() instanceof HoeItem)) {
             return;
         }
-        if (isInteratable(player, world, pos)) {
+        if (isInteractable(player, world, pos)) {
             if (requiresTool() && !(damageTool(player, hoe, 1))) {
                 return;
             }
