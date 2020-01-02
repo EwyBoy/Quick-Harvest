@@ -1,68 +1,46 @@
 package com.ewyboy.quickharvest.harvester;
 
-import com.ewyboy.quickharvest.api.IHarvester;
-import net.minecraft.block.*;
+import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.util.FloodFill;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ChorusFlowerBlock;
+import net.minecraft.block.ChorusPlantBlock;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.CachedBlockInfo;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.function.Predicate;
 
-public class ChorusHarvester implements IHarvester {
+public class ChorusHarvester extends HarvesterImpl {
+    private static final Predicate<BlockState> fruit = s -> s.getBlock() instanceof ChorusFlowerBlock;
+    private static final Predicate<BlockState> notFruit = s -> s.getBlock() instanceof ChorusPlantBlock;
+
+    public ChorusHarvester() {
+        super(null, new ItemStack(Items.CHORUS_FLOWER), Blocks.CHORUS_FLOWER.getDefaultState());
+    }
 
     @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-
-        Set<CachedBlockInfo> fruit = new HashSet<>();
-        BlockPos lowestPoint = pos;
-
-        //TODO Unify duplicated code here
-        Set<BlockPos> visited = new HashSet<>();
-        Deque<BlockPos> toVisit = new ArrayDeque<BlockPos>() {
-            @Override
-            public void push(BlockPos o) {
-                super.push(o);
-                visited.add(o);
-            }
-        };
-        toVisit.add(pos);
-        while (!toVisit.isEmpty()) {
-            BlockPos q = toVisit.pollLast();
-            CachedBlockInfo qInfo = new CachedBlockInfo(world, q, false);
-            BlockState qState = qInfo.getBlockState();
-
-            if (state == null) {
-                continue;
-            }
-
-            Block qBlock = qState.getBlock();
-
-            if (qBlock instanceof ChorusFlowerBlock) {
-                fruit.add(qInfo);
-            } else if (!(qBlock instanceof ChorusPlantBlock)) {
-                continue;
-            }
-
-            for (Direction s : Direction.values()) {
-                BlockPos next = q.offset(s);
-                if (visited.contains(next)) {
-                    continue;
-                }
-                toVisit.push(next);
-            }
-
-            if (q.getY() < lowestPoint.getY()) {
-                lowestPoint = q;
-            }
+        FloodFill floodFill = new FloodFill(pos, s -> fruit.or(notFruit).test(s) ? Direction.values() : NO_DIRECTIONS, ImmutableSet.of(fruit, notFruit));
+        floodFill.search(world);
+        final NonNullList<ItemStack> drops = NonNullList.create();
+        if (floodFill.getFoundTargets()
+                .get(fruit)
+                .stream()
+                .allMatch(info -> breakBlock(player, world, info.getPos(), drops))
+        ) {
+            floodFill.getFoundTargets()
+                    .get(notFruit)
+                    .forEach(info -> breakBlock(player, world, info.getPos(), drops));
+            replant(player, world, floodFill.getLowestPoint(), drops);
         }
-        fruit.forEach(info -> breakIntoInventory(player, world, info.getPos()));
-        breakIntoInventory(player, world, lowestPoint.up());
-        replant(player, world, lowestPoint, Blocks.CHORUS_FLOWER.getDefaultState());
+        drops.forEach(drop -> giveItemToPlayer(player, drop));
     }
 }
