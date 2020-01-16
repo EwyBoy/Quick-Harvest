@@ -19,6 +19,11 @@ import java.util.function.Predicate;
 public class TallPlantHarvester extends HarvesterImpl {
 
     @Override
+    public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
+        return super.canHarvest(player, hand, world, pos, state) && !player.getHeldItem(hand).getItem().equals(state.getBlock().asItem());
+    }
+
+    @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         final Predicate<BlockState> isSame = s -> s.getBlock() == state.getBlock();
         FloodFill floodFill = new FloodFill(pos,
