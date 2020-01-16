@@ -2,6 +2,7 @@ package com.ewyboy.quickharvest.api;
 
 import com.ewyboy.quickharvest.harvester.*;
 import net.minecraft.block.*;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Items;
@@ -26,7 +27,7 @@ public class HarvestManager {
     public static void onBlockQuickHarvest(final PlayerInteractEvent.RightClickBlock event) {
         final World world = event.getWorld();
         final PlayerEntity player = event.getPlayer();
-        if (player.isSneaking()) {
+        if (player.getPose() == Pose.CROUCHING) {
             return;
         }
         if (event.getUseBlock() != Event.Result.DENY && event.getUseItem() != Event.Result.DENY && world instanceof ServerWorld) {
