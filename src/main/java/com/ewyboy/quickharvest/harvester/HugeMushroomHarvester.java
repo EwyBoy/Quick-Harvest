@@ -35,7 +35,9 @@ public class HugeMushroomHarvester extends HarvesterImpl {
 
     @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return isBlockModifiable(player, world, pos) && world.getBlockState(pos.down()).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.RED_MUSHROOM);
+        return super.canHarvest(player, hand, world, pos, state)
+                && world.getBlockState(pos.down()).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.RED_MUSHROOM)
+                && IS_MUSHROOM_STEM.test(state);
     }
 
     @Override
