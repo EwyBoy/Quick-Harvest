@@ -26,7 +26,9 @@ public class HarvestManager {
     public static void onBlockQuickHarvest(final PlayerInteractEvent.RightClickBlock event) {
         final World world = event.getWorld();
         final PlayerEntity player = event.getPlayer();
-
+        if (player.isSneaking()) {
+            return;
+        }
         if (event.getUseBlock() != Event.Result.DENY && event.getUseItem() != Event.Result.DENY && world instanceof ServerWorld) {
             final ServerWorld serverWorld = (ServerWorld) world;
             final BlockPos pos = event.getPos();
