@@ -25,6 +25,11 @@ public class KelpHarvester extends HarvesterImpl {
     private static final Predicate<BlockState> IS_KELP = IS_KELP_BLOCK.or(IS_KELP_TOP);
 
     @Override
+    public String getName() {
+        return "Kelp";
+    }
+
+    @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         FloodFill floodFill = new FloodFill(pos,
                 s -> IS_KELP.test(s) ? new Direction[]{Direction.UP, Direction.DOWN} : NO_DIRECTIONS,

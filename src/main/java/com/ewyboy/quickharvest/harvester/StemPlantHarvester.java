@@ -21,6 +21,11 @@ public class StemPlantHarvester extends HarvesterImpl {
     }
 
     @Override
+    public String getName() {
+        return "Stem Plant";
+    }
+
+    @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         Block block = state.getBlock();
 

@@ -18,6 +18,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Map;
 import java.util.function.BooleanSupplier;
@@ -36,6 +37,9 @@ public abstract class HarvesterImpl implements IHarvester {
     private final ItemStack replant;
     private final BlockState replantState;
     protected final BooleanSupplier isReplantable;
+    private ForgeConfigSpec.BooleanValue enabled;
+
+    public abstract String getName();
 
     public HarvesterImpl() {
         this(null, null);
@@ -197,13 +201,13 @@ public abstract class HarvesterImpl implements IHarvester {
         player.sendStatusMessage(new TranslationTextComponent(messageKey), true);
     }
 
-    /**
-     * TODO ADD SHIT HERE
-     * @return supplier
-     */
+    public void setEnabled(ForgeConfigSpec.BooleanValue enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public BooleanSupplier enabled() {
-        return () -> true;
+        return enabled :: get;
     }
 
     /**

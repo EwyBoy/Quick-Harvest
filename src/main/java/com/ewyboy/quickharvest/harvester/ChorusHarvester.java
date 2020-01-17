@@ -28,6 +28,11 @@ public class ChorusHarvester extends HarvesterImpl {
     }
 
     @Override
+    public String getName() {
+        return "Chorus";
+    }
+
+    @Override
     public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         FloodFill floodFill = new FloodFill(pos, s -> fruit.or(notFruit).test(s) ? Direction.values() : NO_DIRECTIONS, ImmutableSet.of(fruit, notFruit));
         floodFill.search(world);
@@ -44,4 +49,6 @@ public class ChorusHarvester extends HarvesterImpl {
         }
         drops.forEach(drop -> giveItemToPlayer(player, drop));
     }
+
+
 }

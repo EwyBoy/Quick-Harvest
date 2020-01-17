@@ -34,6 +34,11 @@ public class HugeMushroomHarvester extends HarvesterImpl {
     }
 
     @Override
+    public String getName() {
+        return "Huge Mushroom";
+    }
+
+    @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         return super.canHarvest(player, hand, world, pos, state)
                 && world.getBlockState(pos.down()).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.RED_MUSHROOM)

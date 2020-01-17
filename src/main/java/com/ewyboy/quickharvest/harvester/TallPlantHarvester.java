@@ -19,6 +19,11 @@ import java.util.function.Predicate;
 public class TallPlantHarvester extends HarvesterImpl {
 
     @Override
+    public String getName() {
+        return "Tall Plant";
+    }
+
+    @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         return super.canHarvest(player, hand, world, pos, state) && !player.getHeldItem(hand).getItem().equals(state.getBlock().asItem());
     }

@@ -27,6 +27,11 @@ public class DefaultHarvester extends HarvesterImpl {
     }
 
     @Override
+    public String getName() {
+        return "Default";
+    }
+
+    @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
         return super.canHarvest(player, hand, world, pos, state) && state.has(this.ageProperty) && state.get(this.ageProperty) == this.maxAge;
     }
@@ -43,7 +48,6 @@ public class DefaultHarvester extends HarvesterImpl {
             } else {
                 replant(player, world, pos, drops);
             }
-            System.out.println(drops);
         }
         drops.forEach(drop -> giveItemToPlayer(player, drop));
     }
