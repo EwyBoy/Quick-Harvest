@@ -15,13 +15,15 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
+import java.util.function.Supplier;
+
 public class DefaultHarvester extends HarvesterImpl {
 
     private final int maxAge;
     private final IntegerProperty ageProperty;
 
-    public DefaultHarvester(Item replantItem, BlockState replantState, IntegerProperty ageProperty) {
-        super(QuickHarvest.HOE_TAG, new ItemStack(replantItem), replantState);
+    public DefaultHarvester(Supplier<Item> replantItem, Supplier<BlockState> replantState, IntegerProperty ageProperty) {
+        super(QuickHarvest.HOE_TAG, () -> new ItemStack(replantItem.get()), replantState);
         this.ageProperty = ageProperty;
         this.maxAge = ageProperty.getAllowedValues().stream().mapToInt(Integer::intValue).max().getAsInt();
     }

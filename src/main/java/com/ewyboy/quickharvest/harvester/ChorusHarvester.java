@@ -24,7 +24,7 @@ public class ChorusHarvester extends HarvesterImpl {
     private static final Predicate<BlockState> notFruit = s -> s.getBlock() instanceof ChorusPlantBlock;
 
     public ChorusHarvester() {
-        super(null, new ItemStack(Items.CHORUS_FLOWER), Blocks.CHORUS_FLOWER.getDefaultState());
+        super(null, () -> new ItemStack(Items.CHORUS_FLOWER), () -> Blocks.CHORUS_FLOWER.getDefaultState());
     }
 
     @Override

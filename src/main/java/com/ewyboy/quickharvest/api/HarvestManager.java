@@ -65,13 +65,13 @@ public class HarvestManager {
     }
 
     static {
-        // Register vanilla harvesters
-        register(new DefaultHarvester(Items.WHEAT_SEEDS, Blocks.WHEAT.getDefaultState(), CropsBlock.AGE), () -> Blocks.WHEAT);
-        register(new DefaultHarvester(Items.CARROT, Blocks.CARROTS.getDefaultState(), CarrotBlock.AGE), () -> Blocks.CARROTS);
-        register(new DefaultHarvester(Items.POTATO, Blocks.POTATOES.getDefaultState(), PotatoBlock.AGE), () -> Blocks.POTATOES);
-        register(new DefaultHarvester(Items.BEETROOT_SEEDS, Blocks.BEETROOTS.getDefaultState(), BeetrootBlock.BEETROOT_AGE), () -> Blocks.BEETROOTS);
-        register(new DefaultHarvester(Items.NETHER_WART, Blocks.NETHER_WART.getDefaultState(), NetherWartBlock.AGE), () -> Blocks.NETHER_WART);
-        register(new DefaultHarvester(Items.COCOA_BEANS, Blocks.COCOA.getDefaultState(), CocoaBlock.AGE), () -> Blocks.COCOA);
+        // Register vanilla harvesters NOTE: DO NOT REPLACE WITH METHOD REFERENCE... THIS IS TO PREVENT CLASS LOADING
+        register(new DefaultHarvester(() -> Items.WHEAT_SEEDS, () -> Blocks.WHEAT.getDefaultState(), CropsBlock.AGE), () -> Blocks.WHEAT);
+        register(new DefaultHarvester(() -> Items.CARROT, () -> Blocks.CARROTS.getDefaultState(), CarrotBlock.AGE), () -> Blocks.CARROTS);
+        register(new DefaultHarvester(() -> Items.POTATO, () -> Blocks.POTATOES.getDefaultState(), PotatoBlock.AGE), () -> Blocks.POTATOES);
+        register(new DefaultHarvester(() -> Items.BEETROOT_SEEDS, () -> Blocks.BEETROOTS.getDefaultState(), BeetrootBlock.BEETROOT_AGE), () -> Blocks.BEETROOTS);
+        register(new DefaultHarvester(() -> Items.NETHER_WART, () -> Blocks.NETHER_WART.getDefaultState(), NetherWartBlock.AGE), () -> Blocks.NETHER_WART);
+        register(new DefaultHarvester(() -> Items.COCOA_BEANS, () -> Blocks.COCOA.getDefaultState(), CocoaBlock.AGE), () -> Blocks.COCOA);
         register(new StemPlantHarvester(), () -> Blocks.ATTACHED_MELON_STEM, () -> Blocks.MELON);
         register(new StemPlantHarvester(), () -> Blocks.ATTACHED_PUMPKIN_STEM, () -> Blocks.PUMPKIN);
         register(new TallPlantHarvester(), () -> Blocks.SUGAR_CANE, () -> Blocks.CACTUS);
@@ -103,7 +103,7 @@ public class HarvestManager {
 
         @Override
         public boolean test(Block block) {
-            return Arrays.stream(blocks).anyMatch(Predicate.isEqual(block));
+            return Arrays.stream(blocks).map(Supplier::get).anyMatch(Predicate.isEqual(block));
         }
     }
 

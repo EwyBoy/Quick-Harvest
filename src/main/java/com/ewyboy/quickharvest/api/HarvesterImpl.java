@@ -22,6 +22,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Map;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 /**
  * This is what you extend if you need to add specialized harvesters for your crops.
@@ -31,11 +32,9 @@ public abstract class HarvesterImpl implements IHarvester {
     public static final String HARVEST_ERROR_PROTECTED_KEY = QuickHarvest.ID + ".message.error.protected";
     protected static final Direction[] NO_DIRECTIONS = new Direction[0];
 
-    private static BooleanSupplier requiresTool = Config.SETTINGS :: requiresTool;
-    private static BooleanSupplier damagesTool = Config.SETTINGS :: damagesTool;
     private final Tag<Item> validTool;
-    private final ItemStack replant;
-    private final BlockState replantState;
+    private final Supplier<ItemStack> replant;
+    private final Supplier<BlockState> replantState;
     protected final BooleanSupplier isReplantable;
     private ForgeConfigSpec.BooleanValue enabled;
 
@@ -49,8 +48,8 @@ public abstract class HarvesterImpl implements IHarvester {
         this(validTool, null);
     }
 
-    public HarvesterImpl(Tag<Item> validTool, BlockState replantState) {
-        this(validTool, ItemStack.EMPTY, replantState);
+    public HarvesterImpl(Tag<Item> validTool, Supplier<BlockState> replantState) {
+        this(validTool, () -> ItemStack.EMPTY, replantState);
     }
 
     /**
@@ -60,11 +59,11 @@ public abstract class HarvesterImpl implements IHarvester {
      * @param replant      An itemstack which will be taken out of the dropped items when the crop is replanted by the harvester.
      * @param replantState A state to use for replanting crops. If you do not like how this system replants blocks you can override the {@link #replant(ServerPlayerEntity, ServerWorld, BlockPos, NonNullList)} method
      */
-    public HarvesterImpl(Tag<Item> validTool, ItemStack replant, BlockState replantState) {
+    public HarvesterImpl(Tag<Item> validTool, Supplier<ItemStack> replant, Supplier<BlockState> replantState) {
         this.validTool = validTool;
         this.replant = replant;
         this.replantState = replantState;
-        this.isReplantable = () -> !replant.isEmpty();
+        this.isReplantable = () -> !replant.get().isEmpty();
     }
 
     /**
@@ -84,7 +83,7 @@ public abstract class HarvesterImpl implements IHarvester {
      * @return true if what the player is holding is valid for harvesting the crop
      */
     public boolean holdingValidTool(ServerPlayerEntity playerEntity) {
-        if (requiresTool.getAsBoolean()) {
+        if (Config.SETTINGS.requiresTool()) {
             ItemStack heldItem = playerEntity.getHeldItem(Hand.MAIN_HAND);
             return validTool != null && validTool.contains(heldItem.getItem());
         }
@@ -120,6 +119,7 @@ public abstract class HarvesterImpl implements IHarvester {
      * @return A stack containing the replantable itemblock if it was in the drops
      */
     public ItemStack takeReplantable(NonNullList<ItemStack> drops) {
+        ItemStack replant = this.replant.get();
         for (ItemStack stack : drops) {
             if (stack.isItemEqual(replant) && stack.getCount() >= replant.getCount()) {
                 stack.shrink(replant.getCount());
@@ -152,7 +152,7 @@ public abstract class HarvesterImpl implements IHarvester {
         if (holdingValidTool(player)) {
             ItemStack itemStack = takeReplantable(drops);
             if (!itemStack.isEmpty()) {
-                BlockState state = replantState;
+                BlockState state = replantState.get();
                 if (stateMapper != null) for (Map.Entry<IProperty<T>, T> entry : stateMapper.entrySet()) {
                     state = state.with(entry.getKey(), entry.getValue());
                 }
@@ -207,7 +207,7 @@ public abstract class HarvesterImpl implements IHarvester {
 
     @Override
     public BooleanSupplier enabled() {
-        return enabled :: get;
+        return enabled::get;
     }
 
     /**
@@ -217,7 +217,7 @@ public abstract class HarvesterImpl implements IHarvester {
      * @return true if the damage was done.
      */
     public boolean damageTool(ServerPlayerEntity player, ItemStack tool, int amount) {
-        if (!damagesTool.getAsBoolean()) {
+        if (!Config.SETTINGS.damagesTool()) {
             return true;
         }
         if (tool.getMaxDamage() - tool.getDamage() >= amount) {

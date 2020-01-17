@@ -3,7 +3,6 @@ package com.ewyboy.quickharvest.config;
 import com.ewyboy.quickharvest.QuickHarvest;
 import com.ewyboy.quickharvest.api.HarvestManager;
 import com.ewyboy.quickharvest.api.HarvesterImpl;
-import com.ewyboy.quickharvest.api.IHarvester;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,23 +24,23 @@ public class Config {
 
         Settings(ForgeConfigSpec.Builder builder) {
 
-            builder.comment("Config file for Quick Harvest")
-                    .push("general")
-            ;
+            builder.comment("Config file for Quick Harvest");
 
             HarvestManager.forEach(iHarvester -> {
                 if (iHarvester instanceof HarvesterImpl) {
 
-                    builder.comment("").push(((HarvesterImpl) iHarvester).getName());
+                    builder.push(((HarvesterImpl) iHarvester).getName());
 
                     ((HarvesterImpl) iHarvester).setEnabled(
-                            builder.comment("Disable " +  ((HarvesterImpl) iHarvester).getName() + " harvester.").
-                            define(((HarvesterImpl) iHarvester).getName(), true)
+                            builder.comment("Disable " + ((HarvesterImpl) iHarvester).getName() + " harvester by setting to false.").
+                                    define("enabled", true)
                     );
 
                     builder.pop();
                 }
             });
+
+            builder.push("general");
 
             requiresTool = builder.comment("If set to true, this will require a player to be holding a hoe to quick harvest.")
                     .translation(key("requiresTool"))
