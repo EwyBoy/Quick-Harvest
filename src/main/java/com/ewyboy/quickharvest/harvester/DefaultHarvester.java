@@ -17,8 +17,8 @@ import net.minecraft.world.server.ServerWorld;
 
 public class DefaultHarvester extends HarvesterImpl {
 
-    private final IntegerProperty ageProperty;
     private final int maxAge;
+    private final IntegerProperty ageProperty;
 
     public DefaultHarvester(Item replantItem, BlockState replantState, IntegerProperty ageProperty) {
         super(QuickHarvest.HOE_TAG, new ItemStack(replantItem), replantState);
@@ -38,7 +38,6 @@ public class DefaultHarvester extends HarvesterImpl {
         }
         NonNullList<ItemStack> drops = NonNullList.create();
         if (breakBlock(player, world, pos, drops)) {
-            System.out.println(drops);
             if (state.has(BlockStateProperties.HORIZONTAL_FACING)) {
                 replant(player, world, pos, drops, ImmutableMap.of(CocoaBlock.HORIZONTAL_FACING, state.get(CocoaBlock.HORIZONTAL_FACING)));
             } else {
