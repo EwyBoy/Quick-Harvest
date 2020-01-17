@@ -198,6 +198,15 @@ public abstract class HarvesterImpl implements IHarvester {
     }
 
     /**
+     * TODO ADD SHIT HERE
+     * @return supplier
+     */
+    @Override
+    public BooleanSupplier enabled() {
+        return () -> true;
+    }
+
+    /**
      * @param player The player using the tool
      * @param tool   The tool to damage
      * @param amount The amount of damage to do

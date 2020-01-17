@@ -7,10 +7,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * An interface for adding right click harvest functionality. Make sure you register whatever is implementing this to the {@link HarvestManager}
  */
 public interface IHarvester {
+
+    BooleanSupplier enabled();
 
     /**
      * Uses ServerWorld as the server is what should be handling this, and it makes using {@link Block#getDrops} easier

@@ -21,6 +21,7 @@ public class Config {
         private final BooleanValue requiresTool;
 
         Settings(ForgeConfigSpec.Builder builder) {
+
             builder.comment("Config file for Quick Harvest")
                     .push("general")
             ;

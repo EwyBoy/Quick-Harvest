@@ -65,25 +65,10 @@ minecraft {
 
 repositories {
     mavenLocal()
-
-    maven {
-        // for JEI
-        name "progwml6"
-        url "http://dvs1.progwml6.com/files/maven"
-    }
-
-    maven {
-        // for Hwyla
-        name "tehnut"
-        url "https://tehnut.info/maven"
-    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${MC_VERSION}-${FORGE_VERSION}"
-//    compile fg.deobf('mcp.mobius.waila:Hwyla:1.10.6-B67_1.14.4')
-//    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
-//    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")
 }
 
 jar {
