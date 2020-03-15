@@ -15,13 +15,13 @@ Quick Harvest any crop or plant by right-clicking
 [[dependencies.quickharvest]]
     modId="forge"
     mandatory=true
-    versionRange="[30.0.41,)"
+    versionRange="[31.1.0,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.quickharvest]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.1]"
+    versionRange="[1.15.2]"
     ordering="NONE"
     side="BOTH"
