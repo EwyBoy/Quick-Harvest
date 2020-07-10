@@ -84,7 +84,7 @@ public class HugeMushroomHarvester extends HarvesterImpl {
     @Override
     public ItemStack takeReplantable(NonNullList<ItemStack> drops) {
         for (ItemStack stack : drops) {
-            if (Tags.Items.MUSHROOMS.contains(stack.getItem()) && stack.getCount() >= 1) {
+            if (Tags.Items.MUSHROOMS.func_230235_a_(stack.getItem()) && stack.getCount() >= 1) {
                 ItemStack ret = stack.copy();
                 stack.shrink(1);
                 ret.setCount(1);

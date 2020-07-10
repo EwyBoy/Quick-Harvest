@@ -9,8 +9,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.IProperty;
-import net.minecraft.tags.Tag;
+import net.minecraft.state.Property;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -32,7 +32,7 @@ public abstract class HarvesterImpl implements IHarvester {
     public static final String HARVEST_ERROR_PROTECTED_KEY = QuickHarvest.ID + ".message.error.protected";
     protected static final Direction[] NO_DIRECTIONS = new Direction[0];
 
-    private final Tag<Item> validTool;
+    private final ITag.INamedTag<Item> validTool;
     private final Supplier<ItemStack> replant;
     private final Supplier<BlockState> replantState;
     protected final BooleanSupplier isReplantable;
@@ -44,11 +44,11 @@ public abstract class HarvesterImpl implements IHarvester {
         this(null, null);
     }
 
-    public HarvesterImpl(Tag<Item> validTool) {
+    public HarvesterImpl(ITag.INamedTag<Item> validTool) {
         this(validTool, null);
     }
 
-    public HarvesterImpl(Tag<Item> validTool, Supplier<BlockState> replantState) {
+    public HarvesterImpl(ITag.INamedTag<Item> validTool, Supplier<BlockState> replantState) {
         this(validTool, () -> ItemStack.EMPTY, replantState);
     }
 
@@ -59,7 +59,7 @@ public abstract class HarvesterImpl implements IHarvester {
      * @param replant      An itemstack which will be taken out of the dropped items when the crop is replanted by the harvester.
      * @param replantState A state to use for replanting crops. If you do not like how this system replants blocks you can override the {@link #replant(ServerPlayerEntity, ServerWorld, BlockPos, NonNullList)} method
      */
-    public HarvesterImpl(Tag<Item> validTool, Supplier<ItemStack> replant, Supplier<BlockState> replantState) {
+    public HarvesterImpl(ITag.INamedTag<Item> validTool, Supplier<ItemStack> replant, Supplier<BlockState> replantState) {
         this.validTool = validTool;
         this.replant = replant;
         this.replantState = replantState;
@@ -75,7 +75,7 @@ public abstract class HarvesterImpl implements IHarvester {
      * @return true if the block is modifiable
      */
     public boolean isBlockModifiable(PlayerEntity player, ServerWorld world, BlockPos pos) {
-        return world.isBlockLoaded(pos) && world.isBlockModifiable(player, pos) && world.canMineBlockBody(player, pos);
+        return world.isBlockLoaded(pos) && world.isBlockModifiable(player, pos);
     }
 
     /**
@@ -85,7 +85,7 @@ public abstract class HarvesterImpl implements IHarvester {
     public boolean holdingValidTool(ServerPlayerEntity playerEntity) {
         if (Config.SETTINGS.requiresTool()) {
             ItemStack heldItem = playerEntity.getHeldItem(Hand.MAIN_HAND);
-            return validTool != null && validTool.contains(heldItem.getItem());
+            return validTool != null && validTool.func_230235_a_(heldItem.getItem());
         }
         return true;
     }
@@ -145,7 +145,7 @@ public abstract class HarvesterImpl implements IHarvester {
      * @param stateMapper A map of property-value pairs to replace in the planted state
      * @return true if the crop is replanted
      */
-    public <T extends Comparable<T>> boolean replant(ServerPlayerEntity player, ServerWorld world, BlockPos pos, NonNullList<ItemStack> drops, Map<IProperty<T>, T> stateMapper) {
+    public <T extends Comparable<T>> boolean replant(ServerPlayerEntity player, ServerWorld world, BlockPos pos, NonNullList<ItemStack> drops, Map<Property<T>, T> stateMapper) {
         if (!isReplantable.getAsBoolean() || replantState == null) {
             return true;
         }
@@ -153,7 +153,7 @@ public abstract class HarvesterImpl implements IHarvester {
             ItemStack itemStack = takeReplantable(drops);
             if (!itemStack.isEmpty()) {
                 BlockState state = replantState.get();
-                if (stateMapper != null) for (Map.Entry<IProperty<T>, T> entry : stateMapper.entrySet()) {
+                if (stateMapper != null) for (Map.Entry<Property<T>, T> entry : stateMapper.entrySet()) {
                     state = state.with(entry.getKey(), entry.getValue());
                 }
                 world.setBlockState(pos, state);

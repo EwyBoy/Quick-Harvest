@@ -35,7 +35,7 @@ public class DefaultHarvester extends HarvesterImpl {
 
     @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return super.canHarvest(player, hand, world, pos, state) && state.has(this.ageProperty) && state.get(this.ageProperty) == this.maxAge;
+        return super.canHarvest(player, hand, world, pos, state) && state.func_235901_b_(this.ageProperty) && state.get(this.ageProperty) == this.maxAge;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DefaultHarvester extends HarvesterImpl {
         }
         NonNullList<ItemStack> drops = NonNullList.create();
         if (breakBlock(player, world, pos, drops)) {
-            if (state.has(BlockStateProperties.HORIZONTAL_FACING)) {
+            if (state.func_235901_b_(BlockStateProperties.HORIZONTAL_FACING)) {
                 replant(player, world, pos, drops, ImmutableMap.of(CocoaBlock.HORIZONTAL_FACING, state.get(CocoaBlock.HORIZONTAL_FACING)));
             } else {
                 replant(player, world, pos, drops);
