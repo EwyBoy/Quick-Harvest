@@ -19,13 +19,17 @@ import java.util.function.Supplier;
 
 public class DefaultHarvester extends HarvesterImpl {
 
-    private final int maxAge;
+    private final int harvestAge;
     private final IntegerProperty ageProperty;
 
-    public DefaultHarvester(Supplier<Item> replantItem, Supplier<BlockState> replantState, IntegerProperty ageProperty) {
+    public DefaultHarvester(Supplier<Item> replantItem, Supplier<BlockState> replantState, IntegerProperty ageProperty, int minHarvestAge) {
         super(QuickHarvest.HOE_TAG, () -> new ItemStack(replantItem.get()), replantState);
         this.ageProperty = ageProperty;
-        this.maxAge = ageProperty.getAllowedValues().stream().mapToInt(Integer::intValue).max().getAsInt();
+        this.harvestAge = minHarvestAge;
+    }
+
+    public DefaultHarvester(Supplier<Item> replantItem, Supplier<BlockState> replantState, IntegerProperty ageProperty) {
+        this(replantItem, replantState, ageProperty, ageProperty.getAllowedValues().stream().mapToInt(Integer::intValue).max().getAsInt());
     }
 
     @Override
@@ -35,7 +39,7 @@ public class DefaultHarvester extends HarvesterImpl {
 
     @Override
     public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        return super.canHarvest(player, hand, world, pos, state) && state.func_235901_b_(this.ageProperty) && state.get(this.ageProperty) == this.maxAge;
+        return super.canHarvest(player, hand, world, pos, state) && state.func_235901_b_(this.ageProperty) && state.get(this.ageProperty) >= this.harvestAge;
     }
 
     @Override
