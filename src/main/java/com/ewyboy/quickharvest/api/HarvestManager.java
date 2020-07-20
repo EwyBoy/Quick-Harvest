@@ -72,6 +72,7 @@ public class HarvestManager {
         register(new DefaultHarvester(() -> Items.BEETROOT_SEEDS, () -> Blocks.BEETROOTS.getDefaultState(), BeetrootBlock.BEETROOT_AGE), () -> Blocks.BEETROOTS);
         register(new DefaultHarvester(() -> Items.NETHER_WART, () -> Blocks.NETHER_WART.getDefaultState(), NetherWartBlock.AGE), () -> Blocks.NETHER_WART);
         register(new DefaultHarvester(() -> Items.COCOA_BEANS, () -> Blocks.COCOA.getDefaultState(), CocoaBlock.AGE), () -> Blocks.COCOA);
+        register(new DefaultHarvester(() -> Items.SWEET_BERRIES, () -> Blocks.SWEET_BERRY_BUSH.getDefaultState().with(SweetBerryBushBlock.AGE, 1), SweetBerryBushBlock.AGE, 2), () -> Blocks.SWEET_BERRY_BUSH);
         register(new StemPlantHarvester(), () -> Blocks.ATTACHED_MELON_STEM, () -> Blocks.MELON);
         register(new StemPlantHarvester(), () -> Blocks.ATTACHED_PUMPKIN_STEM, () -> Blocks.PUMPKIN);
         register(new TallPlantHarvester(), () -> Blocks.SUGAR_CANE, () -> Blocks.CACTUS);
