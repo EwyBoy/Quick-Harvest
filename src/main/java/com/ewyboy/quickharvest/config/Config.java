@@ -2,7 +2,7 @@ package com.ewyboy.quickharvest.config;
 
 import com.ewyboy.quickharvest.QuickHarvest;
 import com.ewyboy.quickharvest.api.HarvestManager;
-import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.api.HarvestImpl;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,12 +27,12 @@ public class Config {
             builder.comment("Config file for Quick Harvest");
 
             HarvestManager.forEach(iHarvester -> {
-                if (iHarvester instanceof HarvesterImpl) {
+                if (iHarvester instanceof HarvestImpl) {
 
-                    builder.push(((HarvesterImpl) iHarvester).getName());
+                    builder.push(((HarvestImpl) iHarvester).getName());
 
-                    ((HarvesterImpl) iHarvester).setEnabled(
-                            builder.comment("Disable " + ((HarvesterImpl) iHarvester).getName() + " harvester by setting to false.").
+                    ((HarvestImpl) iHarvester).setEnabled(
+                            builder.comment("Disable " + ((HarvestImpl) iHarvester).getName() + " harvester by setting to false.").
                                     define("enabled", true)
                     );
 

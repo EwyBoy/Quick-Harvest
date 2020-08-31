@@ -1,7 +1,7 @@
 package com.ewyboy.quickharvest.harvester;
 
 import com.ewyboy.quickharvest.QuickHarvest;
-import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.api.HarvestImpl;
 import net.minecraft.block.AttachedStemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,7 +14,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public class StemPlantHarvester extends HarvesterImpl {
+public class StemPlantHarvester extends HarvestImpl {
 
     public StemPlantHarvester() {
         super(QuickHarvest.AXE_TAG);

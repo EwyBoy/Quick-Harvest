@@ -1,7 +1,7 @@
 package com.ewyboy.quickharvest.harvester;
 
 import com.ewyboy.quickharvest.QuickHarvest;
-import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.api.HarvestImpl;
 import com.ewyboy.quickharvest.util.FloodFill;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.BlockState;
@@ -22,7 +22,7 @@ import net.minecraftforge.common.Tags;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-public class HugeMushroomHarvester extends HarvesterImpl {
+public class HugeMushroomHarvester extends HarvestImpl {
 
     private static final Predicate<BlockState> IS_BROWN_MUSHROOM = s -> s.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK;
     private static final Predicate<BlockState> IS_RED_MUSHROOM = s -> s.getBlock() == Blocks.RED_MUSHROOM_BLOCK;

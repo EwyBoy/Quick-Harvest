@@ -107,5 +107,4 @@ public class HarvestManager {
             return Arrays.stream(blocks).map(Supplier::get).anyMatch(Predicate.isEqual(block));
         }
     }
-
 }

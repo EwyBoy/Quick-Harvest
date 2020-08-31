@@ -1,6 +1,6 @@
 package com.ewyboy.quickharvest.harvester;
 
-import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.api.HarvestImpl;
 import com.ewyboy.quickharvest.util.FloodFill;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.BlockState;
@@ -16,7 +16,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-public class TallPlantHarvester extends HarvesterImpl {
+public class TallPlantHarvester extends HarvestImpl {
 
     @Override
     public String getName() {

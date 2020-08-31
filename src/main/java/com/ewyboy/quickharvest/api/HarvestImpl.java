@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 /**
  * This is what you extend if you need to add specialized harvesters for your crops.
  */
-public abstract class HarvesterImpl implements IHarvester {
+public abstract class HarvestImpl implements IHarvester {
 
     public static final String HARVEST_ERROR_PROTECTED_KEY = QuickHarvest.ID + ".message.error.protected";
     protected static final Direction[] NO_DIRECTIONS = new Direction[0];
@@ -40,15 +40,15 @@ public abstract class HarvesterImpl implements IHarvester {
 
     public abstract String getName();
 
-    public HarvesterImpl() {
+    public HarvestImpl() {
         this(null, null);
     }
 
-    public HarvesterImpl(ITag.INamedTag<Item> validTool) {
+    public HarvestImpl(ITag.INamedTag<Item> validTool) {
         this(validTool, null);
     }
 
-    public HarvesterImpl(ITag.INamedTag<Item> validTool, Supplier<BlockState> replantState) {
+    public HarvestImpl(ITag.INamedTag<Item> validTool, Supplier<BlockState> replantState) {
         this(validTool, () -> ItemStack.EMPTY, replantState);
     }
 
@@ -59,7 +59,7 @@ public abstract class HarvesterImpl implements IHarvester {
      * @param replant      An itemstack which will be taken out of the dropped items when the crop is replanted by the harvester.
      * @param replantState A state to use for replanting crops. If you do not like how this system replants blocks you can override the {@link #replant(ServerPlayerEntity, ServerWorld, BlockPos, NonNullList)} method
      */
-    public HarvesterImpl(ITag.INamedTag<Item> validTool, Supplier<ItemStack> replant, Supplier<BlockState> replantState) {
+    public HarvestImpl(ITag.INamedTag<Item> validTool, Supplier<ItemStack> replant, Supplier<BlockState> replantState) {
         this.validTool = validTool;
         this.replant = replant;
         this.replantState = replantState;

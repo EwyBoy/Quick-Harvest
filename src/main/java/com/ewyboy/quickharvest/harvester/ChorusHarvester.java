@@ -1,6 +1,6 @@
 package com.ewyboy.quickharvest.harvester;
 
-import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.api.HarvestImpl;
 import com.ewyboy.quickharvest.util.FloodFill;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.BlockState;
@@ -18,7 +18,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.function.Predicate;
 
-public class ChorusHarvester extends HarvesterImpl {
+public class ChorusHarvester extends HarvestImpl {
 
     private static final Predicate<BlockState> fruit = s -> s.getBlock() instanceof ChorusFlowerBlock;
     private static final Predicate<BlockState> notFruit = s -> s.getBlock() instanceof ChorusPlantBlock;

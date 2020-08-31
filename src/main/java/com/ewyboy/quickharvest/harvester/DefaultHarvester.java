@@ -1,7 +1,7 @@
 package com.ewyboy.quickharvest.harvester;
 
 import com.ewyboy.quickharvest.QuickHarvest;
-import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.api.HarvestImpl;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CocoaBlock;
@@ -17,7 +17,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.function.Supplier;
 
-public class DefaultHarvester extends HarvesterImpl {
+public class DefaultHarvester extends HarvestImpl {
 
     private final int harvestAge;
     private final IntegerProperty ageProperty;

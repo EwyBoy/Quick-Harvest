@@ -1,6 +1,6 @@
 package com.ewyboy.quickharvest.harvester;
 
-import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.api.HarvestImpl;
 import com.ewyboy.quickharvest.util.FloodFill;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.BlockState;
@@ -18,7 +18,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-public class KelpHarvester extends HarvesterImpl {
+public class KelpHarvester extends HarvestImpl {
 
     private static final Predicate<BlockState> IS_KELP_BLOCK = s -> s.getBlock() instanceof KelpBlock;
     private static final Predicate<BlockState> IS_KELP_TOP = s -> s.getBlock() instanceof KelpTopBlock;
