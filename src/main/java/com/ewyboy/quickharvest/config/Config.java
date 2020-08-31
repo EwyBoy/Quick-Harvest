@@ -1,63 +1,46 @@
 package com.ewyboy.quickharvest.config;
 
-import com.ewyboy.quickharvest.QuickHarvest;
-import com.ewyboy.quickharvest.api.HarvestManager;
-import com.ewyboy.quickharvest.api.HarvesterImpl;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import net.minecraftforge.common.ToolType;
 
 public class Config {
 
-    public static final ForgeConfigSpec settingSpec;
-    public static final Settings SETTINGS;
+    public static final ForgeConfigSpec SERVER;
+
+    public static final HarvesterConfig DEFAULT;
+    public static final HarvesterConfig WHEAT;
+    public static final HarvesterConfig CARROTS;
+    public static final HarvesterConfig POTATOES;
+    public static final HarvesterConfig BEETROOTS;
+    public static final HarvesterConfig CHORUS;
+    public static final HarvesterConfig COCOA;
+    public static final HarvesterConfig KELP;
+    public static final HarvesterConfig SUGAR_CANE;
+    public static final HarvesterConfig CACTUS;
+    public static final HarvesterConfig MELON;
+    public static final HarvesterConfig PUMPKIN;
+    public static final HarvesterConfig NETHER_WART;
+    public static final HarvesterConfig BERRY_BUSH;
 
     static {
-        final Pair<Settings, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Settings :: new);
-        settingSpec = specPair.getRight();
-        SETTINGS = specPair.getLeft();
-    }
+        Builder serverSpec = new Builder();
 
-    public static class Settings {
+        DEFAULT = new HarvesterConfig("default", serverSpec, false, false, false, null, "minecraft:air");
+        WHEAT = new HarvesterConfig("wheat", serverSpec, true, false, true, ToolType.HOE, "minecraft:wheat_seeds");
+        CARROTS = new HarvesterConfig("carrots", serverSpec, true, false, true, ToolType.HOE, "minecraft:carrot");
+        POTATOES = new HarvesterConfig("potatoes", serverSpec, true, false, true, ToolType.HOE, "minecraft:potato");
+        BEETROOTS = new HarvesterConfig("beetroots", serverSpec, true, false, true, ToolType.HOE, "minecraft:beetroot_seeds");
+        CHORUS = new HarvesterConfig("chorus", serverSpec, true, false, true, ToolType.AXE, "minecraft:chorus_flower");
+        COCOA = new HarvesterConfig("cocoa", serverSpec, true, false, true, ToolType.AXE, "minecraft:cocoa_beans");
+        KELP = new HarvesterConfig("kelp", serverSpec, true, false, false, null, "minecraft:air");
+        SUGAR_CANE = new HarvesterConfig("sugar_cane", serverSpec, true, false, false, null, "minecraft:air");
+        CACTUS = new HarvesterConfig("cactus", serverSpec, true, false, false, ToolType.AXE, "minecraft:air");
+        MELON = new HarvesterConfig("melon", serverSpec, true, false, false, ToolType.AXE, "minecraft:air");
+        PUMPKIN = new HarvesterConfig("pumpkin", serverSpec, true, false, false, ToolType.AXE, "minecraft:air");
+        NETHER_WART = new HarvesterConfig("nether_wart", serverSpec, true, false, true, ToolType.HOE, "minecraft:nether_wart");
+        BERRY_BUSH = new HarvesterConfig("berry_bush", serverSpec, true, false, true, null, "minecraft:sweet_berries");
 
-        private final BooleanValue requiresTool;
-
-        Settings(ForgeConfigSpec.Builder builder) {
-
-            builder.comment("Config file for Quick Harvest");
-
-            HarvestManager.forEach(iHarvester -> {
-                if (iHarvester instanceof HarvesterImpl) {
-
-                    builder.push(((HarvesterImpl) iHarvester).getName());
-
-                    ((HarvesterImpl) iHarvester).setEnabled(
-                            builder.comment("Disable " + ((HarvesterImpl) iHarvester).getName() + " harvester by setting to false.").
-                                    define("enabled", true)
-                    );
-
-                    builder.pop();
-                }
-            });
-
-            builder.push("general");
-
-            requiresTool = builder.comment("If set to true, this will require a player to be holding a hoe to quick harvest.")
-                    .translation(key("requiresTool"))
-                    .define("requiresTool", false)
-            ;
-        }
-
-        public boolean requiresTool() {
-            return requiresTool.get();
-        }
-
-        private String key(String key) {
-            return String.format("%s.config.%s", QuickHarvest.ID, key);
-        }
-
-        public boolean damagesTool() {
-            return false; // TODO: add
-        }
+        SERVER = serverSpec.build();
     }
 }

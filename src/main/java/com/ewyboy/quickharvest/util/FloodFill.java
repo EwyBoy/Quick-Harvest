@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class FloodFill {
-
+    public static final Direction[] NO_DIRECTIONS = new Direction[0];
     private final Function<BlockState, Iterable<Direction>> stateSearchMapper;
     private final Map<Predicate<BlockState>, Set<CachedBlockInfo>> foundTargets;
     private final Deque<BlockPos> toVisit;
@@ -20,8 +20,8 @@ public class FloodFill {
     private BlockPos highestPoint;
 
     public FloodFill(BlockPos origin, Function<BlockState, Direction[]> stateSearchMapper, Set<Predicate<BlockState>> targets) {
-        this.lowestPoint = origin;
-        this.highestPoint = origin;
+        this.lowestPoint = origin.toImmutable();
+        this.highestPoint = origin.toImmutable();
         this.stateSearchMapper = s -> Arrays.asList(stateSearchMapper.apply(s));
         this.foundTargets = new HashMap<>();
         targets.forEach(target -> foundTargets.put(target, new HashSet<>()));
@@ -44,15 +44,15 @@ public class FloodFill {
             final BlockState blockState = blockInfo.getBlockState();
             if (blockState == null) continue; // if the block is not loadable
             // Add neighbours to search list
-            stateSearchMapper.apply(blockState).forEach(offset -> toVisit.push(pos.offset(offset)));
+            stateSearchMapper.apply(blockState).forEach(it -> toVisit.push(pos.offset(it)));
             // Add this block to any of the target lists it matches.
-            foundTargets.entrySet().stream().filter(entry -> entry.getKey().test(blockState)).forEach(entry -> entry.getValue().add(blockInfo));
+            foundTargets.entrySet().stream().filter(it -> it.getKey().test(blockState)).forEach(it -> it.getValue().add(blockInfo));
             // Move lowest and highest point if this is a valid block
-            if (foundTargets.keySet().stream().anyMatch(test -> test.test(blockState))) {
+            if (foundTargets.keySet().stream().anyMatch(it -> it.test(blockState))) {
                 if (pos.getY() < lowestPoint.getY()) {
-                    lowestPoint = pos;
+                    lowestPoint = pos.toImmutable();
                 } else if (pos.getY() > highestPoint.getY()) {
-                    highestPoint = pos;
+                    highestPoint = pos.toImmutable();
                 }
             }
         }

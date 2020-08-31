@@ -1,56 +1,50 @@
 package com.ewyboy.quickharvest.harvester;
 
-import com.ewyboy.quickharvest.QuickHarvest;
-import com.ewyboy.quickharvest.api.HarvesterImpl;
+import com.ewyboy.quickharvest.config.HarvesterConfig;
 import net.minecraft.block.AttachedStemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.StemGrownBlock;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public class StemPlantHarvester extends HarvesterImpl {
+import java.util.List;
 
-    public StemPlantHarvester() {
-        super(QuickHarvest.AXE_TAG);
+public class StemPlantHarvester extends AbstractHarvester {
+    private final Block stem;
+    private final Block friut;
+
+    public StemPlantHarvester(HarvesterConfig config, Block stem, Block friut) {
+        super(config);
+        this.stem = stem;
+        this.friut = friut;
     }
 
     @Override
-    public String getName() {
-        return "Stem Plant";
-    }
-
-    @Override
-    public boolean canHarvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        Block block = state.getBlock();
-
-        if (block instanceof AttachedStemBlock) return true;
-        if (!(block instanceof StemGrownBlock) || !world.isBlockLoaded(pos)) return false;
-
-        for (Direction off : Direction.Plane.HORIZONTAL) {
-            BlockState offState = world.getBlockState(pos.offset(off));
-            Block stemMaybe = offState.getBlock();
-            if (stemMaybe instanceof AttachedStemBlock) {
-                return offState.get(AttachedStemBlock.FACING) == off.getOpposite();
-            }
+    public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
+        final Block block = state.getBlock();
+        if (block == stem) {
+            final Direction grown = state.get(AttachedStemBlock.FACING);
+            final BlockPos fruitPos = pos.offset(grown);
+            final BlockState fruitState = world.getBlockState(fruitPos);
+            return breakFruit(player, hand, world, fruitPos, fruitState, grown.getOpposite());
+        } else {
+            return breakFruit(player, hand, world, pos, state, side);
         }
-        return false;
+    }
+
+    private List<ItemStack> breakFruit(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
+        damageTool(player, hand, 1);
+        world.destroyBlock(pos, false);
+        return Block.getDrops(state, world, pos, null);
     }
 
     @Override
-    public void harvest(ServerPlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state) {
-        NonNullList<ItemStack> drops = NonNullList.create();
-        Block block = state.getBlock();
-        if (block instanceof AttachedStemBlock) {
-            breakBlock(player, world, pos.offset(state.get(AttachedStemBlock.FACING)), drops);
-        } else if (block instanceof StemGrownBlock) {
-            breakBlock(player, world, pos, drops);
-        }
-        drops.forEach(drop -> giveItemToPlayer(player, drop));
+    protected boolean isEffectiveOn(BlockState state) {
+        final Block block = state.getBlock();
+        return block == stem || block == friut;
     }
 }
