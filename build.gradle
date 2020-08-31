@@ -9,7 +9,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 version = "${MC_VERSION}-${VERSION}"
@@ -21,14 +21,15 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
-
-    apply plugin: 'idea'
     mappings channel: MCP_CHANNEL, version: MCP_MAPPINGS
 
     runs {
         client {
-
             workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
             ideaModule "${project.name}.main"
 
             mods {
@@ -41,6 +42,9 @@ minecraft {
         server {
 
             workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
             ideaModule "${project.name}.main"
 
             mods {
