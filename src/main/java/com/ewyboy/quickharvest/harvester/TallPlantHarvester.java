@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class TallPlantHarvester extends AbstractHarvester {
+
     private final Predicate<BlockState> plantPredicate = this::isEffectiveOn;
     private final Block plant;
 
@@ -33,15 +34,19 @@ public class TallPlantHarvester extends AbstractHarvester {
                 s -> plantPredicate.test(s) ? new Direction[]{Direction.UP, Direction.DOWN} : FloodFill.NO_DIRECTIONS,
                 ImmutableSet.of(plantPredicate)
         );
+
         floodFill.search(world);
         List<ItemStack> drops = new ArrayList<>();
         final Set<CachedBlockInfo> matches = floodFill.getFoundTargets().get(plantPredicate);
+
         for (CachedBlockInfo info : matches) {
             if (info.getPos().getY() == floodFill.getLowestPoint().getY() || info.getBlockState() == null) continue;
             drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
             world.destroyBlock(info.getPos(), false);
         }
+
         damageTool(player, hand, matches.size() - 1);
+
         return drops;
     }
 

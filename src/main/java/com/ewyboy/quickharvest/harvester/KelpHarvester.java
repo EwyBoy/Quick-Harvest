@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class KelpHarvester extends AbstractHarvester {
+
     private static final Predicate<BlockState> IS_KELP_BLOCK = s -> s.getBlock() == Blocks.KELP_PLANT;
     private static final Predicate<BlockState> IS_KELP_TOP = s -> s.getBlock() == Blocks.KELP;
     private static final Predicate<BlockState> KELP = IS_KELP_BLOCK.or(IS_KELP_TOP);
@@ -31,19 +32,24 @@ public class KelpHarvester extends AbstractHarvester {
     @Override
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         FloodFill floodFill = new FloodFill(pos,
-                s -> KELP.test(s) ? new Direction[]{Direction.UP, Direction.DOWN} : FloodFill.NO_DIRECTIONS,
-                ImmutableSet.of(KELP)
+            kelpMe -> KELP.test(kelpMe) ? new Direction[] { Direction.UP, Direction.DOWN }
+            : FloodFill.NO_DIRECTIONS,
+            ImmutableSet.of(KELP)
         );
+
         floodFill.search(world);
         List<ItemStack> drops = new ArrayList<>();
         final Set<CachedBlockInfo> kelpBlocks = floodFill.getFoundTargets().get(KELP);
+
         for (CachedBlockInfo info : kelpBlocks) {
             if (info.getPos() == floodFill.getLowestPoint() || info.getBlockState() == null) continue;
             drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
             world.destroyBlock(info.getPos(), false);
         }
+
         damageTool(player, hand, kelpBlocks.size() - 1);
         takeReplantItem(drops);
+
         return drops;
     }
 

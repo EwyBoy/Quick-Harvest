@@ -15,6 +15,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.List;
 
 public class NetherWartHarvester extends AbstractHarvester {
+
     public NetherWartHarvester(HarvesterConfig config) {
         super(config);
     }
@@ -26,11 +27,12 @@ public class NetherWartHarvester extends AbstractHarvester {
         world.setBlockState(pos, state.with(NetherWartBlock.AGE, 0));
         damageTool(player, hand, 1);
         takeReplantItem(drops);
+
         return drops;
     }
 
     @Override
     protected boolean isEffectiveOn(BlockState state) {
-        return state.getBlock() == Blocks.NETHER_WART;
+        return state.getBlock() == Blocks.NETHER_WART && state.get(NetherWartBlock.AGE) == 3;
     }
 }

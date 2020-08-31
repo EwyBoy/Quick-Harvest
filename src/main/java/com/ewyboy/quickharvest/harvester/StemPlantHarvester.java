@@ -14,13 +14,14 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.List;
 
 public class StemPlantHarvester extends AbstractHarvester {
-    private final Block stem;
-    private final Block friut;
 
-    public StemPlantHarvester(HarvesterConfig config, Block stem, Block friut) {
+    private final Block stem;
+    private final Block fruit;
+
+    public StemPlantHarvester(HarvesterConfig config, Block stem, Block fruit) {
         super(config);
         this.stem = stem;
-        this.friut = friut;
+        this.fruit = fruit;
     }
 
     @Override
@@ -39,12 +40,13 @@ public class StemPlantHarvester extends AbstractHarvester {
     private List<ItemStack> breakFruit(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         damageTool(player, hand, 1);
         world.destroyBlock(pos, false);
+
         return Block.getDrops(state, world, pos, null);
     }
 
     @Override
     protected boolean isEffectiveOn(BlockState state) {
         final Block block = state.getBlock();
-        return block == stem || block == friut;
+        return block == stem || block == fruit;
     }
 }

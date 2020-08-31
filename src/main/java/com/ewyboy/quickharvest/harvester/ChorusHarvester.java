@@ -29,8 +29,10 @@ public class ChorusHarvester extends AbstractHarvester {
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         final List<ItemStack> drops = new ArrayList<>();
         final FloodFill floodFill = new FloodFill(pos, s -> fruit.or(notFruit).test(s) ? Direction.values() : FloodFill.NO_DIRECTIONS, ImmutableSet.of(fruit, notFruit));
-        floodFill.search(world);
         int blocksBroken = 0;
+
+        floodFill.search(world);
+
         for (Set<CachedBlockInfo> cachedBlockInfos : floodFill.getFoundTargets().values()) {
             blocksBroken += cachedBlockInfos.size();
             for (CachedBlockInfo info : cachedBlockInfos) {
@@ -39,9 +41,11 @@ public class ChorusHarvester extends AbstractHarvester {
                 world.destroyBlock(info.getPos(), false);
             }
         }
+
         world.setBlockState(floodFill.getLowestPoint(), Blocks.CHORUS_FLOWER.getDefaultState(), 7);
         damageTool(player, hand, blocksBroken);
         takeReplantItem(drops);
+
         return drops;
     }
 

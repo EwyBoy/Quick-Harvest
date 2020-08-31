@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class FloodFill {
+
     public static final Direction[] NO_DIRECTIONS = new Direction[0];
     private final Function<BlockState, Iterable<Direction>> stateSearchMapper;
     private final Map<Predicate<BlockState>, Set<CachedBlockInfo>> foundTargets;
@@ -42,12 +43,15 @@ public class FloodFill {
             final BlockPos pos = toVisit.pollLast();
             final CachedBlockInfo blockInfo = new CachedBlockInfo(world, pos, false);
             final BlockState blockState = blockInfo.getBlockState();
+
             if (blockState == null) continue; // if the block is not loadable
+
             // Add neighbours to search list
             stateSearchMapper.apply(blockState).forEach(it -> toVisit.push(pos.offset(it)));
             // Add this block to any of the target lists it matches.
             foundTargets.entrySet().stream().filter(it -> it.getKey().test(blockState)).forEach(it -> it.getValue().add(blockInfo));
             // Move lowest and highest point if this is a valid block
+
             if (foundTargets.keySet().stream().anyMatch(it -> it.test(blockState))) {
                 if (pos.getY() < lowestPoint.getY()) {
                     lowestPoint = pos.toImmutable();
@@ -73,8 +77,10 @@ public class FloodFill {
     public FloodFill add(FloodFill other) {
         if (other.highestPoint.getY() > this.highestPoint.getY()) this.highestPoint = other.highestPoint;
         if (other.lowestPoint.getY() < this.lowestPoint.getY()) this.lowestPoint = other.lowestPoint;
+
         this.visited.addAll(other.visited);
         other.getFoundTargets().forEach((key, value) -> this.foundTargets.computeIfAbsent(key, $ -> new HashSet<>()).addAll(value));
+
         return this;
     }
 }

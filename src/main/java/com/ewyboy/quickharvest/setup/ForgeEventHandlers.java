@@ -20,20 +20,27 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 @EventBusSubscriber(bus = Bus.FORGE, modid = QuickHarvest.ID)
 public class ForgeEventHandlers {
+
     @SubscribeEvent
     public static void onRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
+
         if (event.getUseBlock() == Result.DENY || event.getUseItem() == Result.DENY) {
             return;
         }
+
         final World rawWorld = event.getWorld();
+
         if (!(rawWorld instanceof ServerWorld)) {
             return;
         }
+
         final ServerWorld world = (ServerWorld) rawWorld;
         final PlayerEntity player = event.getPlayer();
+
         if (player.getPose() == Pose.CROUCHING) {
             return;
         }
+
         final BlockPos pos = event.getPos();
         final BlockState state = world.getBlockState(pos);
         final Hand hand = event.getHand();
@@ -42,7 +49,7 @@ public class ForgeEventHandlers {
         for (final Harvester harvester : Registries.HARVESTERS.getValues()) {
             if (!harvester.enabled() || !harvester.canHarvest(player, hand, world, pos, state, side)) continue;
             harvester.harvest(player, hand, world, pos, state, side)
-                    .forEach(stack -> ItemHandlerHelper.giveItemToPlayer(player, stack));
+                .forEach(stack -> ItemHandlerHelper.giveItemToPlayer(player, stack));
             player.swing(hand, true);
             event.setUseBlock(Result.DENY);
             event.setUseItem(Result.DENY);

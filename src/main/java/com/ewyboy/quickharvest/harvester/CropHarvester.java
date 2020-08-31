@@ -14,6 +14,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.List;
 
 public class CropHarvester extends AbstractHarvester {
+
     private final CropsBlock effectiveOn;
 
     public CropHarvester(HarvesterConfig config, Block effectiveOn) {
@@ -34,6 +35,7 @@ public class CropHarvester extends AbstractHarvester {
         world.setBlockState(pos, effectiveOn.withAge(0), 7);
         damageTool(player, hand, 1);
         takeReplantItem(drops);
+
         return drops;
     }
 }
