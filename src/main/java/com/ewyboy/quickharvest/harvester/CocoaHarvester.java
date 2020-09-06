@@ -15,6 +15,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.List;
 
 public class CocoaHarvester extends AbstractHarvester {
+
     public CocoaHarvester(HarvesterConfig config) {
         super(config);
     }
@@ -26,11 +27,12 @@ public class CocoaHarvester extends AbstractHarvester {
         world.setBlockState(pos, state.with(CocoaBlock.AGE, 0));
         damageTool(player, hand, 1);
         takeReplantItem(drops);
+
         return drops;
     }
 
     @Override
     protected boolean isEffectiveOn(BlockState state) {
-        return state.getBlock() == Blocks.COCOA;
+        return state.getBlock() == Blocks.COCOA && state.get(CocoaBlock.AGE) == 2;
     }
 }

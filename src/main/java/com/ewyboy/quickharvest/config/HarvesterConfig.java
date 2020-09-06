@@ -12,6 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Objects;
 
 public class HarvesterConfig {
+
     private final BooleanValue enabled;
     private final BooleanValue requiresTool;
     private final BooleanValue takeReplantItem;
@@ -19,43 +20,43 @@ public class HarvesterConfig {
     private final ConfigValue<String> replantItem;
     private final String name;
 
-    public HarvesterConfig(String name, Builder server, boolean enabled, boolean requiresTool, boolean takeReplantItem, ToolType toolType, String replantDefault) {
+    public HarvesterConfig(String name, Builder configBuilder, boolean enabled, boolean requiresTool, boolean takeReplantItem, ToolType toolType, String replantDefault) {
         this.name = name;
-        server.push(name);
+        configBuilder.push(name);
 
-        this.enabled = server
+        this.enabled = configBuilder
                 .comment("If true, this harvester will be enabled.")
                 .translation(String.format("config.%s.%s.enabled", QuickHarvest.ID, name))
                 .worldRestart()
                 .define("enabled", enabled);
 
-        this.requiresTool = server
+        this.requiresTool = configBuilder
                 .comment("If true, this harvester will require the set tool to function.")
                 .translation(String.format("config.%s.%s.requires_tool", QuickHarvest.ID, name))
                 .worldRestart()
                 .define("requires_tool", requiresTool);
 
-        this.takeReplantItem = server
+        this.takeReplantItem = configBuilder
                 .comment("If true, this harvester will take a replant item when performing a quick harvest.")
                 .translation(String.format("config.%s.%s.take_replant_item", QuickHarvest.ID, name))
                 .worldRestart()
                 .define("take_replant_item", takeReplantItem);
 
-        this.validToolType = server
+        this.validToolType = configBuilder
                 .comment("A string representing the type of tool required to use the harvester.")
                 .comment("NOTE: Only works if 'require_tool' is set to true")
                 .comment("Recommended values: 'hoe', 'axe', 'shovel', 'pickaxe'")
                 .translation(String.format("config.%s.%s.valid_tool_type", QuickHarvest.ID, name))
                 .define("valid_tool_type", toolType == null ? "" : toolType.getName());
 
-        this.replantItem = server
+        this.replantItem = configBuilder
                 .comment("The registry name of the item that is required to replant after a quick harvest.")
                 .comment("NOTE: This only works if 'take_replant_item' is true.")
                 .translation(String.format("config.%s.%s.replant_item", QuickHarvest.ID, name))
                 .worldRestart()
                 .define("replant_item", replantDefault, str -> Objects.nonNull(str) && ResourceLocation.isResouceNameValid((String) str));
 
-        server.pop();
+        configBuilder.pop();
     }
 
     public boolean isEnabled() {

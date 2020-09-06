@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class AbstractHarvester extends Harvester {
+
     private final HarvesterConfig config;
 
     protected AbstractHarvester() {
@@ -29,15 +30,15 @@ public abstract class AbstractHarvester extends Harvester {
     @Override
     public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         return isEffectiveOn(state)  // This harvester works on the block
-                && canPlayerEdit(player, hand, world, pos, state, side)  // The player has permission to edit the block
-                && (!requiresTool() ||  // No tool is required or
-                player.getHeldItemMainhand().getToolTypes().contains(requiredTool())); // the player is holding the correct tool
+            && canPlayerEdit(player, hand, world, pos, state, side)  // The player has permission to edit the block
+            && (!requiresTool() ||  // No tool is required or
+            player.getHeldItemMainhand().getToolTypes().contains(requiredTool())); // the player is holding the correct tool
     }
 
     @Override
     public boolean canPlayerEdit(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         return world.isBlockLoaded(pos) // Block is loaded
-                && world.isBlockModifiable(player, pos); // Player has permissions to edit the block
+            && world.isBlockModifiable(player, pos); // Player has permissions to edit the block
     }
 
     @Override

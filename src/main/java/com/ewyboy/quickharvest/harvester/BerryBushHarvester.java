@@ -15,6 +15,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.List;
 
 public class BerryBushHarvester extends AbstractHarvester {
+
     public BerryBushHarvester(HarvesterConfig config) {
         super(config);
     }
@@ -22,13 +23,14 @@ public class BerryBushHarvester extends AbstractHarvester {
     @Override
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         final List<ItemStack> drops = Block.getDrops(state, world, pos, null, player, player.getHeldItem(hand));
-        world.setBlockState(pos, state.with(SweetBerryBushBlock.AGE, 2));
+        world.setBlockState(pos, state.with(SweetBerryBushBlock.AGE, 1));
         takeReplantItem(drops);
+
         return drops;
     }
 
     @Override
     protected boolean isEffectiveOn(BlockState state) {
-        return state.getBlock() == Blocks.SWEET_BERRY_BUSH;
+        return state.getBlock() == Blocks.SWEET_BERRY_BUSH && state.get(SweetBerryBushBlock.AGE) > 1;
     }
 }
