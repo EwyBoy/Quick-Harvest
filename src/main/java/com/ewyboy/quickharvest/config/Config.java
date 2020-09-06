@@ -22,6 +22,8 @@ public class Config {
     public static final HarvesterConfig PUMPKIN;
     public static final HarvesterConfig NETHER_WART;
     public static final HarvesterConfig BERRY_BUSH;
+    public static final HarvesterConfig TWISTING_VINES;
+    public static final HarvesterConfig WEEPING_VINES;
 
     static {
         Builder serverSpec = new Builder();
@@ -40,6 +42,8 @@ public class Config {
         PUMPKIN = new HarvesterConfig("pumpkin", serverSpec, true, false, false, ToolType.AXE, "minecraft:air");
         NETHER_WART = new HarvesterConfig("nether_wart", serverSpec, true, false, true, ToolType.HOE, "minecraft:nether_wart");
         BERRY_BUSH = new HarvesterConfig("berry_bush", serverSpec, true, false, true, null, "minecraft:sweet_berries");
+        TWISTING_VINES = new HarvesterConfig("twisting_vines", serverSpec, true, false, false, null, "minecraft:air");
+        WEEPING_VINES = new HarvesterConfig("weeping_vines", serverSpec, true, false, false, null, "minecraft:air");
 
         SERVER = serverSpec.build();
     }

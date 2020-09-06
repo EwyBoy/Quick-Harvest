@@ -42,7 +42,7 @@ public class KelpHarvester extends AbstractHarvester {
         final Set<CachedBlockInfo> kelpBlocks = floodFill.getFoundTargets().get(KELP);
 
         for (CachedBlockInfo info : kelpBlocks) {
-            if (info.getPos() == floodFill.getLowestPoint() || info.getBlockState() == null) continue;
+            if (info.getPos().equals(floodFill.getLowestPoint()) || info.getBlockState() == null) continue;
             drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
             world.destroyBlock(info.getPos(), false);
         }

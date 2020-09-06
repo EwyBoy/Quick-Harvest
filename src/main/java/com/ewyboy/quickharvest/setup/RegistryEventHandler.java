@@ -46,7 +46,9 @@ public class RegistryEventHandler {
             new StemPlantHarvester(Config.MELON, Blocks.ATTACHED_MELON_STEM, Blocks.MELON).setRegistryName(QuickHarvest.ID, Config.MELON.getName()),
             new StemPlantHarvester(Config.PUMPKIN, Blocks.ATTACHED_PUMPKIN_STEM, Blocks.PUMPKIN).setRegistryName(QuickHarvest.ID, Config.PUMPKIN.getName()),
             new NetherWartHarvester(Config.NETHER_WART).setRegistryName(QuickHarvest.ID, Config.NETHER_WART.getName()),
-            new BerryBushHarvester(Config.BERRY_BUSH).setRegistryName(QuickHarvest.ID, Config.BERRY_BUSH.getName())
+            new BerryBushHarvester(Config.BERRY_BUSH).setRegistryName(QuickHarvest.ID, Config.BERRY_BUSH.getName()),
+            new TwistingVineHarvester(Config.TWISTING_VINES).setRegistryName(QuickHarvest.ID, Config.TWISTING_VINES.getName()),
+            new WeepingVineHarvester(Config.WEEPING_VINES).setRegistryName(QuickHarvest.ID, Config.WEEPING_VINES.getName())
         );
     }
 }
