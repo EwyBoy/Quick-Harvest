@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[33,)"
+loaderVersion="[32,)"
 license="MIT"
 issueTrackerURL="https://github.com/EwyBoy/Quick-Harvest/issues"
 
@@ -23,6 +23,6 @@ Quick Harvest any crop or plant by right-clicking
 [[dependencies.quickharvest]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2]"
+    versionRange="[1.16.+,]"
     ordering="NONE"
     side="BOTH"
