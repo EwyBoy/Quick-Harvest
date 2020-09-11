@@ -9,28 +9,24 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 version = "${MC_VERSION}-${VERSION}"
 group = "com.ewyboy.${MODID}"
 archivesBaseName = MODNAME
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
+
+    apply plugin: 'idea'
     mappings channel: MCP_CHANNEL, version: MCP_MAPPINGS
 
     runs {
         client {
             workingDirectory project.file('run')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            ideaModule "${project.name}.main"
+            ideaModule "${rootProject.name}.${project.name}.main"
 
             mods {
                 quickharvest {
@@ -42,10 +38,8 @@ minecraft {
         server {
 
             workingDirectory project.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            ideaModule "${project.name}.main"
 
             mods {
                 quickharvest {
@@ -57,11 +51,8 @@ minecraft {
         data {
             workingDirectory project.file('run')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
             args '--mod', 'quickharvest', '--all', '--output', file('src/generated/resources/')
-            ideaModule "${project.name}.main"
+            ideaModule "${rootProject.name}.${project.name}.main"
 
             mods {
                 quickharvest {
@@ -85,7 +76,7 @@ jar {
         attributes([
             "Specification-Title": MODNAME,
             "Specification-Vendor": AUTHOR,
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "1",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" : AUTHOR,
