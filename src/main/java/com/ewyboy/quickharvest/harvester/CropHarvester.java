@@ -38,4 +38,5 @@ public class CropHarvester extends AbstractHarvester {
 
         return drops;
     }
+
 }

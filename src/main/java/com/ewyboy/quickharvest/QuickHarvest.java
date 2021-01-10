@@ -24,4 +24,5 @@ public class QuickHarvest {
     public static final class Registries {
         public static final IForgeRegistry<Harvester> HARVESTERS = RegistryManager.ACTIVE.getRegistry(new ResourceLocation(ID, "harvesters"));
     }
+
 }

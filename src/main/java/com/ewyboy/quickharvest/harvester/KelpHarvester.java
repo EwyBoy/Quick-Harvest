@@ -31,18 +31,18 @@ public class KelpHarvester extends AbstractHarvester {
 
     @Override
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
-        FloodFill floodFill = new FloodFill(pos,
-            kelpMe -> KELP.test(kelpMe) ? new Direction[] { Direction.UP, Direction.DOWN }
-            : FloodFill.NO_DIRECTIONS,
-            ImmutableSet.of(KELP)
-        );
+        FloodFill floodFill = new FloodFill(pos, kelpMe -> KELP.test(kelpMe) ? new Direction[]{Direction.UP, Direction.DOWN} : FloodFill.NO_DIRECTIONS, ImmutableSet.of(KELP));
 
         floodFill.search(world);
         List<ItemStack> drops = new ArrayList<>();
         final Set<CachedBlockInfo> kelpBlocks = floodFill.getFoundTargets().get(KELP);
 
-        for (CachedBlockInfo info : kelpBlocks) {
-            if (info.getPos().equals(floodFill.getLowestPoint()) || info.getBlockState() == null) continue;
+        for(CachedBlockInfo info : kelpBlocks) {
+            if(info.getPos().equals(floodFill.getLowestPoint())) {
+                continue;
+            } else {
+                info.getBlockState();
+            }
             drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
             world.destroyBlock(info.getPos(), false);
         }
@@ -57,4 +57,5 @@ public class KelpHarvester extends AbstractHarvester {
     protected boolean isEffectiveOn(BlockState state) {
         return KELP.test(state);
     }
+
 }

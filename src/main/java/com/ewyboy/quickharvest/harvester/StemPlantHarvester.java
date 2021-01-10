@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +28,8 @@ public class StemPlantHarvester extends AbstractHarvester {
     @Override
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         final Block block = state.getBlock();
-        if (block == stem) {
+
+        if(block == stem) {
             final Direction grown = state.get(AttachedStemBlock.FACING);
             final BlockPos fruitPos = pos.offset(grown);
             final BlockState fruitState = world.getBlockState(fruitPos);
@@ -49,4 +51,5 @@ public class StemPlantHarvester extends AbstractHarvester {
         final Block block = state.getBlock();
         return block == stem || block == fruit;
     }
+
 }

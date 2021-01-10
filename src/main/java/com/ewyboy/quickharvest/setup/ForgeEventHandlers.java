@@ -1,11 +1,12 @@
 package com.ewyboy.quickharvest.setup;
 
+
 import com.ewyboy.quickharvest.QuickHarvest;
-import com.ewyboy.quickharvest.QuickHarvest.Registries;
 import com.ewyboy.quickharvest.api.Harvester;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -24,20 +25,24 @@ public class ForgeEventHandlers {
     @SubscribeEvent
     public static void onRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
 
-        if (event.getUseBlock() == Result.DENY || event.getUseItem() == Result.DENY) {
+        if(event.getUseBlock() == Result.DENY || event.getUseItem() == Result.DENY) {
             return;
         }
 
         final World rawWorld = event.getWorld();
 
-        if (!(rawWorld instanceof ServerWorld)) {
+        if(!(rawWorld instanceof ServerWorld)) {
             return;
         }
 
         final ServerWorld world = (ServerWorld) rawWorld;
         final PlayerEntity player = event.getPlayer();
 
-        if (player.getPose() == Pose.CROUCHING) {
+        if(player.getPose() == Pose.CROUCHING) {
+            return;
+        }
+
+        if(player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof ShearsItem) {
             return;
         }
 
@@ -46,10 +51,9 @@ public class ForgeEventHandlers {
         final Hand hand = event.getHand();
         final Direction side = event.getFace();
 
-        for (final Harvester harvester : Registries.HARVESTERS.getValues()) {
-            if (!harvester.enabled() || !harvester.canHarvest(player, hand, world, pos, state, side)) continue;
-            harvester.harvest(player, hand, world, pos, state, side)
-                .forEach(stack -> ItemHandlerHelper.giveItemToPlayer(player, stack));
+        for(final Harvester harvester : QuickHarvest.Registries.HARVESTERS.getValues()) {
+            if(!harvester.enabled() || !harvester.canHarvest(player, hand, world, pos, state, side)) continue;
+            harvester.harvest(player, hand, world, pos, state, side).forEach(stack -> ItemHandlerHelper.giveItemToPlayer(player, stack));
             player.swing(hand, true);
             event.setUseBlock(Result.DENY);
             event.setUseItem(Result.DENY);
@@ -57,4 +61,5 @@ public class ForgeEventHandlers {
             break;
         }
     }
+
 }

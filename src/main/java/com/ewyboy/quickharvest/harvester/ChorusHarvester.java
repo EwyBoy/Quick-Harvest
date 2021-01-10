@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class ChorusHarvester extends AbstractHarvester {
+
     private static final Predicate<BlockState> fruit = s -> s.getBlock() instanceof ChorusFlowerBlock;
     private static final Predicate<BlockState> notFruit = s -> s.getBlock() instanceof ChorusPlantBlock;
 
@@ -33,10 +34,10 @@ public class ChorusHarvester extends AbstractHarvester {
 
         floodFill.search(world);
 
-        for (Set<CachedBlockInfo> cachedBlockInfos : floodFill.getFoundTargets().values()) {
+        for(Set<CachedBlockInfo> cachedBlockInfos : floodFill.getFoundTargets().values()) {
             blocksBroken += cachedBlockInfos.size();
-            for (CachedBlockInfo info : cachedBlockInfos) {
-                if (info.getBlockState() == null) continue;
+            for(CachedBlockInfo info : cachedBlockInfos) {
+                if(info.getBlockState() == null) continue;
                 drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
                 world.destroyBlock(info.getPos(), false);
             }
@@ -53,4 +54,5 @@ public class ChorusHarvester extends AbstractHarvester {
     protected boolean isEffectiveOn(BlockState state) {
         return fruit.or(notFruit).test(state);
     }
+
 }

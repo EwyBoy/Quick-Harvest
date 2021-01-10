@@ -29,20 +29,18 @@ public class TwistingVineHarvester extends AbstractHarvester {
 
     @Override
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
-        FloodFill floodFill = new FloodFill(
-            pos, target -> target.getBlock() == Blocks.TWISTING_VINES_PLANT ? new Direction[] {
-                Direction.UP, Direction.DOWN
-            } : target.getBlock() == Blocks.TWISTING_VINES ? new Direction[] {
-                Direction.DOWN
-            } : FloodFill.NO_DIRECTIONS, ImmutableSet.of(IS_VINES)
-        );
+        FloodFill floodFill = new FloodFill(pos, target -> target.getBlock() == Blocks.TWISTING_VINES_PLANT ? new Direction[]{Direction.UP, Direction.DOWN} : target.getBlock() == Blocks.TWISTING_VINES ? new Direction[]{Direction.DOWN} : FloodFill.NO_DIRECTIONS, ImmutableSet.of(IS_VINES));
 
         floodFill.search(world);
         List<ItemStack> drops = new ArrayList<>();
         final Set<CachedBlockInfo> vineBlocks = floodFill.getFoundTargets().get(IS_VINES);
 
-        for (CachedBlockInfo info : vineBlocks) {
-            if (info.getPos().equals(floodFill.getLowestPoint()) || info.getBlockState() == null) continue;
+        for(CachedBlockInfo info : vineBlocks) {
+            if(info.getPos().equals(floodFill.getLowestPoint())) {
+                continue;
+            } else {
+                info.getBlockState();
+            }
             drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
             world.destroyBlock(info.getPos(), false);
         }
@@ -57,4 +55,5 @@ public class TwistingVineHarvester extends AbstractHarvester {
     protected boolean isEffectiveOn(BlockState state) {
         return state.getBlock() == Blocks.TWISTING_VINES_PLANT || state.getBlock() == Blocks.TWISTING_VINES;
     }
+
 }

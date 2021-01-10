@@ -35,4 +35,5 @@ public class CocoaHarvester extends AbstractHarvester {
     protected boolean isEffectiveOn(BlockState state) {
         return state.getBlock() == Blocks.COCOA && state.get(CocoaBlock.AGE) == 2;
     }
+
 }

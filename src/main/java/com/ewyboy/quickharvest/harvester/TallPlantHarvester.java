@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 
 public class TallPlantHarvester extends AbstractHarvester {
 
-    private final Predicate<BlockState> plantPredicate = this::isEffectiveOn;
+    private final Predicate<BlockState> plantPredicate = this :: isEffectiveOn;
     private final Block plant;
 
     public TallPlantHarvester(HarvesterConfig config, Block plant) {
@@ -30,17 +30,18 @@ public class TallPlantHarvester extends AbstractHarvester {
 
     @Override
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
-        FloodFill floodFill = new FloodFill(pos,
-                s -> plantPredicate.test(s) ? new Direction[]{Direction.UP, Direction.DOWN} : FloodFill.NO_DIRECTIONS,
-                ImmutableSet.of(plantPredicate)
-        );
+        FloodFill floodFill = new FloodFill(pos, s -> plantPredicate.test(s) ? new Direction[]{Direction.UP, Direction.DOWN} : FloodFill.NO_DIRECTIONS, ImmutableSet.of(plantPredicate));
 
         floodFill.search(world);
         List<ItemStack> drops = new ArrayList<>();
         final Set<CachedBlockInfo> matches = floodFill.getFoundTargets().get(plantPredicate);
 
-        for (CachedBlockInfo info : matches) {
-            if (info.getPos().equals(floodFill.getLowestPoint()) || info.getBlockState() == null) continue;
+        for(CachedBlockInfo info : matches) {
+            if(info.getPos().equals(floodFill.getLowestPoint())) {
+                continue;
+            } else {
+                info.getBlockState();
+            }
             drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
             world.destroyBlock(info.getPos(), false);
         }
@@ -54,4 +55,5 @@ public class TallPlantHarvester extends AbstractHarvester {
     protected boolean isEffectiveOn(BlockState state) {
         return state.getBlock() == plant;
     }
+
 }

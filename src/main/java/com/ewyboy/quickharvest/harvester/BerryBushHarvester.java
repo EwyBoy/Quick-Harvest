@@ -33,4 +33,5 @@ public class BerryBushHarvester extends AbstractHarvester {
     protected boolean isEffectiveOn(BlockState state) {
         return state.getBlock() == Blocks.SWEET_BERRY_BUSH && state.get(SweetBerryBushBlock.AGE) > 1;
     }
+
 }

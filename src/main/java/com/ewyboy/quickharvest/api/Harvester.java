@@ -34,6 +34,7 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
      * @param pos    The position of the crop
      * @param state  The state of the crop
      * @param side   The side the player clicked.
+     *
      * @return true if quick harvesting this block is possible.
      */
     public abstract boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side);
@@ -47,6 +48,7 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
      * @param pos    The position of the crop
      * @param state  The state of the crop
      * @param side   The side the player clicked.
+     *
      * @return A list of items that are dropped by the crop when it is broken.
      */
     public abstract List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side);
@@ -62,4 +64,5 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
     protected abstract boolean takesReplantItem();
 
     protected abstract Predicate<ItemStack> replantItem();
+
 }

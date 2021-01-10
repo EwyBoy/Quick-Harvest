@@ -35,4 +35,5 @@ public class NetherWartHarvester extends AbstractHarvester {
     protected boolean isEffectiveOn(BlockState state) {
         return state.getBlock() == Blocks.NETHER_WART && state.get(NetherWartBlock.AGE) == 3;
     }
+
 }
