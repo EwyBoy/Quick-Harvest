@@ -1,7 +1,11 @@
 package com.ewyboy.quickharvest.config;
 
 import com.ewyboy.quickharvest.QuickHarvest;
+import com.google.common.collect.Lists;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
@@ -9,7 +13,6 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.StringUtils;
 
 public class HarvesterConfig {
 
@@ -17,10 +20,11 @@ public class HarvesterConfig {
   private final BooleanValue requiresTool;
   private final BooleanValue takeReplantItem;
   private final ConfigValue<String> validToolType;
+  private final ConfigValue<List<? extends String>> harvestBlacklist;
   private final ConfigValue<String> replantItem;
   private final String name;
 
-  public HarvesterConfig(String name, Builder configBuilder, boolean enabled, boolean requiresTool, boolean takeReplantItem, ToolType toolType, String replantDefault) {
+  public HarvesterConfig(String name, Builder configBuilder, boolean enabled, boolean requiresTool, boolean takeReplantItem, ToolType toolType, String replantDefault, List<Item> harvestBlacklist) {
     this.name = name;
     configBuilder.push(name);
 
@@ -56,7 +60,22 @@ public class HarvesterConfig {
         .worldRestart()
         .define("replant_item", replantDefault, str -> Objects.nonNull(str) && isValidResourceLocationString((String) str));
 
+    this.harvestBlacklist = configBuilder
+        .comment("A List of strings representing the items which when held, this harvester will not work." + (harvestBlacklist.isEmpty() ? "" : String.format("%nRecommended values: %s", harvestBlacklist.stream().map(Item::getRegistryName).filter(Objects::nonNull).map(ResourceLocation::toString).map(s -> '"' + s + '"').collect(Collectors.toList()).toString())))
+        .translation(String.format("config.%s.%s.harvest_blacklist", QuickHarvest.ID, name))
+        .defineList("harvest_blacklist",
+            harvestBlacklist.stream().map(Item::getRegistryName).filter(Objects::nonNull).map(ResourceLocation::toString).collect(Collectors.toList()),
+            it -> ForgeRegistries.ITEMS.containsKey(new ResourceLocation((String) it)));
+
     configBuilder.pop();
+  }
+
+  public List<Item> getBlacklist() {
+    return this.harvestBlacklist.get()
+        .stream()
+        .map(ResourceLocation::new)
+        .map(ForgeRegistries.ITEMS::getValue)
+        .collect(Collectors.toList());
   }
 
   public boolean isEnabled() {

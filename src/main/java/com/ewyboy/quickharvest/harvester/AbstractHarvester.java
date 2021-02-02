@@ -31,8 +31,15 @@ public abstract class AbstractHarvester extends Harvester {
     public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         return isEffectiveOn(state)  // This harvester works on the block
             && canPlayerEdit(player, hand, world, pos, state, side)  // The player has permission to edit the block
+            && !isHoldingBlacklistedItem(player, hand)
             && (!requiresTool() ||  // No tool is required or
             player.getHeldItemMainhand().getToolTypes().contains(requiredTool())); // the player is holding the correct tool
+    }
+
+    @Override
+    public boolean isHoldingBlacklistedItem(PlayerEntity player, Hand hand) {
+        final ItemStack heldStack = player.getHeldItem(hand);
+        return config.getBlacklist().contains(heldStack.getItem());
     }
 
     @Override

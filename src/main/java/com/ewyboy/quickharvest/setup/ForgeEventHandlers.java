@@ -42,10 +42,6 @@ public class ForgeEventHandlers {
             return;
         }
 
-        if(player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof ShearsItem) {
-            return;
-        }
-
         final BlockPos pos = event.getPos();
         final BlockState state = world.getBlockState(pos);
         final Hand hand = event.getHand();

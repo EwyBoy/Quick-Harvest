@@ -24,6 +24,17 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
     public abstract boolean enabled();
 
     /**
+     * Used to check if the player is holding a blacklisted item.
+     * <br>
+     * e.g. holding Shears while attempting to harvest a pumpkin.
+     *
+     * @param player The player trying to quick harvest
+     * @param hand The hand being used
+     * @return true when the item is blacklisted.
+     */
+    public abstract boolean isHoldingBlacklistedItem(PlayerEntity player, Hand hand);
+
+    /**
      * Used to check if a harvester is effective on a given crop, and that that player has permission to edit that block
      * <p>
      * Note: this should also do tool checks.
@@ -33,7 +44,7 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
      * @param world  The world the crop exists in
      * @param pos    The position of the crop
      * @param state  The state of the crop
-     * @param side   The side the player clicked.
+     * @param side   The side the player clicked
      *
      * @return true if quick harvesting this block is possible.
      */
