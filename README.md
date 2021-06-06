@@ -1,6 +1,7 @@
 # Quick-Harvest
 Adds in right-click harvesting to crops and auto replants afterwards.
 
+![image](https://user-images.githubusercontent.com/5883716/120504598-91ad6b80-c3c4-11eb-8afd-0c04a888b9f3.png)
 
 # API guide
 
