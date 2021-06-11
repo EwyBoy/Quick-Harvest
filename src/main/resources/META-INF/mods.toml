@@ -9,9 +9,7 @@ displayName="Quick Harvest"
 version="${file.jarVersion}"
 authors="Ewy, LuHeGi"
 credits="All credits goes to LuHeGi for being a good boy"
-description='''
-Quick Harvest any crop or plant by right-clicking
-'''
+description="Quick Harvest any crop or plant by right-clicking"
 
 [[dependencies.quickharvest]]
     modId="forge"

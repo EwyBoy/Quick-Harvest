@@ -33,6 +33,9 @@ minecraft {
         client {
             workingDirectory project.file('run')
             property 'fml.earlyprogresswindow', 'false'
+            arg "-mixin.config=immersiveengineering.mixins.json"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             mods {
                 quickharvest {
                     source sourceSets.main
@@ -41,8 +44,9 @@ minecraft {
         }
 
         server {
-
             workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             mods {
                 quickharvest {
                     source sourceSets.main
@@ -75,6 +79,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${MC_VERSION}-${FORGE_VERSION}"
     //implementation fg.deobf("curse.maven:bibliotheca-268210:${BIBLIOTHECA}")
     //implementation fg.deobf("curse.maven:worldstripper-250603:${WORLD_STRIPPER}")
+    //implementation fg.deobf("curse.maven:immersive-engineering-231951:${IE}")
 }
 
 jar {
@@ -84,7 +89,7 @@ jar {
             "Specification-Vendor": AUTHOR,
             "Specification-Version": MC_VERSION,
             "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
+            "Implementation-Version": VERSION,
             "Implementation-Vendor" : AUTHOR,
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
