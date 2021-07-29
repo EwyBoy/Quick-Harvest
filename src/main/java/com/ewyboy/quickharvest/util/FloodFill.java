@@ -27,10 +27,10 @@ public class FloodFill {
         this.foundTargets = new HashMap<>();
         targets.forEach(target -> foundTargets.put(target, new HashSet<>()));
         this.visited = new HashSet<>();
-        this.toVisit = new ArrayDeque<BlockPos>() {
+        this.toVisit = new ArrayDeque<>() {
             @Override
             public void push(BlockPos pos) {
-                if(visited.add(pos)) {
+                if (visited.add(pos)) {
                     super.push(pos);
                 }
             }
