@@ -3,16 +3,16 @@ package com.ewyboy.quickharvest.harvester;
 import com.ewyboy.quickharvest.config.HarvesterConfig;
 import com.ewyboy.quickharvest.util.FloodFill;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.CachedBlockInfo;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +28,14 @@ public class TwistingVineHarvester extends AbstractHarvester {
     }
 
     @Override
-    public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
+    public List<ItemStack> harvest(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side) {
         FloodFill floodFill = new FloodFill(pos, target -> target.getBlock() == Blocks.TWISTING_VINES_PLANT ? new Direction[]{Direction.UP, Direction.DOWN} : target.getBlock() == Blocks.TWISTING_VINES ? new Direction[]{Direction.DOWN} : FloodFill.NO_DIRECTIONS, ImmutableSet.of(IS_VINES));
 
         floodFill.search(world);
         List<ItemStack> drops = new ArrayList<>();
-        final Set<CachedBlockInfo> vineBlocks = floodFill.getFoundTargets().get(IS_VINES);
+        final Set<BlockInWorld> vineBlocks = floodFill.getFoundTargets().get(IS_VINES);
 
-        for(CachedBlockInfo info : vineBlocks) {
+        for(BlockInWorld info : vineBlocks) {
             if(info.getPos().equals(floodFill.getLowestPoint())) {
                 continue;
             } else {

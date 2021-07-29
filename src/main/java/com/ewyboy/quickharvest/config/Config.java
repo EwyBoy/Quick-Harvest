@@ -1,7 +1,7 @@
 package com.ewyboy.quickharvest.config;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ToolType;

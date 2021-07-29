@@ -1,10 +1,10 @@
 package com.ewyboy.quickharvest.util;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.CachedBlockInfo;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.*;
 import java.util.function.Function;
@@ -14,7 +14,7 @@ public class FloodFill {
 
     public static final Direction[] NO_DIRECTIONS = new Direction[0];
     private final Function<BlockState, Iterable<Direction>> stateSearchMapper;
-    private final Map<Predicate<BlockState>, Set<CachedBlockInfo>> foundTargets;
+    private final Map<Predicate<BlockState>, Set<BlockInWorld>> foundTargets;
     private final Deque<BlockPos> toVisit;
     private final Set<BlockPos> visited;
     private BlockPos lowestPoint;
@@ -38,10 +38,10 @@ public class FloodFill {
         toVisit.push(origin);
     }
 
-    public void search(ServerWorld world) {
+    public void search(ServerLevel world) {
         while(!toVisit.isEmpty()) {
             final BlockPos pos = toVisit.pollLast();
-            final CachedBlockInfo blockInfo = new CachedBlockInfo(world, pos, false);
+            final BlockInWorld blockInfo = new BlockInWorld(world, pos, false);
             final BlockState blockState = blockInfo.getState();
 
             if(blockState == null) continue; // if the block is not loadable
@@ -62,7 +62,7 @@ public class FloodFill {
         }
     }
 
-    public Map<Predicate<BlockState>, Set<CachedBlockInfo>> getFoundTargets() {
+    public Map<Predicate<BlockState>, Set<BlockInWorld>> getFoundTargets() {
         return foundTargets;
     }
 

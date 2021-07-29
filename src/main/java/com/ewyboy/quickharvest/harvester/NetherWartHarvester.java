@@ -1,16 +1,16 @@
 package com.ewyboy.quickharvest.harvester;
 
 import com.ewyboy.quickharvest.config.HarvesterConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.NetherWartBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class NetherWartHarvester extends AbstractHarvester {
     }
 
     @Override
-    public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
+    public List<ItemStack> harvest(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side) {
         final List<ItemStack> drops = Block.getDrops(state, world, pos, null, player, player.getItemInHand(hand));
         world.destroyBlock(pos, false);
         world.setBlockAndUpdate(pos, state.setValue(NetherWartBlock.AGE, 0));

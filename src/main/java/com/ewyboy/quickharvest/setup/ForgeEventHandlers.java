@@ -3,15 +3,14 @@ package com.ewyboy.quickharvest.setup;
 
 import com.ewyboy.quickharvest.QuickHarvest;
 import com.ewyboy.quickharvest.api.Harvester;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,14 +28,14 @@ public class ForgeEventHandlers {
             return;
         }
 
-        final World rawWorld = event.getWorld();
+        final Level rawWorld = event.getWorld();
 
-        if(!(rawWorld instanceof ServerWorld)) {
+        if(!(rawWorld instanceof ServerLevel)) {
             return;
         }
 
-        final ServerWorld world = (ServerWorld) rawWorld;
-        final PlayerEntity player = event.getPlayer();
+        final ServerLevel world = (ServerLevel) rawWorld;
+        final Player player = event.getPlayer();
 
         if(player.getPose() == Pose.CROUCHING) {
             return;
@@ -44,7 +43,7 @@ public class ForgeEventHandlers {
 
         final BlockPos pos = event.getPos();
         final BlockState state = world.getBlockState(pos);
-        final Hand hand = event.getHand();
+        final InteractionHand hand = event.getHand();
         final Direction side = event.getFace();
 
         for(final Harvester harvester : QuickHarvest.Registries.HARVESTERS.getValues()) {

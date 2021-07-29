@@ -3,13 +3,13 @@ package com.ewyboy.quickharvest.harvester;
 import com.ewyboy.quickharvest.api.Harvester;
 import com.ewyboy.quickharvest.config.Config;
 import com.ewyboy.quickharvest.config.HarvesterConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ToolType;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public abstract class AbstractHarvester extends Harvester {
     }
 
     @Override
-    public boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
+    public boolean canHarvest(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side) {
         return isEffectiveOn(state)  // This harvester works on the block
             && canPlayerEdit(player, hand, world, pos, state, side)  // The player has permission to edit the block
             && !isHoldingBlacklistedItem(player, hand)
@@ -37,13 +37,13 @@ public abstract class AbstractHarvester extends Harvester {
     }
 
     @Override
-    public boolean isHoldingBlacklistedItem(PlayerEntity player, Hand hand) {
+    public boolean isHoldingBlacklistedItem(Player player, InteractionHand hand) {
         final ItemStack heldStack = player.getItemInHand(hand);
         return config.getBlacklist().contains(heldStack.getItem());
     }
 
     @Override
-    public boolean canPlayerEdit(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
+    public boolean canPlayerEdit(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side) {
         return world.hasChunkAt(pos) // Block is loaded
             && world.mayInteract(player, pos); // Player has permissions to edit the block
     }
@@ -73,7 +73,7 @@ public abstract class AbstractHarvester extends Harvester {
         return stack -> stack.getItem() == config.getReplantItem();
     }
 
-    protected void damageTool(PlayerEntity playerEntity, Hand hand, int amount) {
+    protected void damageTool(Player playerEntity, InteractionHand hand, int amount) {
         if (!requiresTool()) return;
         playerEntity.getItemInHand(hand).hurtAndBreak(amount, playerEntity, it -> it.broadcastBreakEvent(hand));
     }

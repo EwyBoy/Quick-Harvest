@@ -2,7 +2,7 @@ package com.ewyboy.quickharvest;
 
 import com.ewyboy.quickharvest.api.Harvester;
 import com.ewyboy.quickharvest.config.Config;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;

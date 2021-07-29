@@ -1,12 +1,12 @@
 package com.ewyboy.quickharvest.api;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -32,7 +32,7 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
      * @param hand The hand being used
      * @return true when the item is blacklisted.
      */
-    public abstract boolean isHoldingBlacklistedItem(PlayerEntity player, Hand hand);
+    public abstract boolean isHoldingBlacklistedItem(Player player, InteractionHand hand);
 
     /**
      * Used to check if a harvester is effective on a given crop, and that that player has permission to edit that block
@@ -48,7 +48,7 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
      *
      * @return true if quick harvesting this block is possible.
      */
-    public abstract boolean canHarvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side);
+    public abstract boolean canHarvest(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side);
 
     /**
      * Handles drops, taking replant item, breaking, replanting and damaging the tool.
@@ -62,11 +62,11 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
      *
      * @return A list of items that are dropped by the crop when it is broken.
      */
-    public abstract List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side);
+    public abstract List<ItemStack> harvest(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side);
 
     protected abstract boolean isEffectiveOn(BlockState state);
 
-    protected abstract boolean canPlayerEdit(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side);
+    protected abstract boolean canPlayerEdit(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side);
 
     protected abstract boolean requiresTool();
 
