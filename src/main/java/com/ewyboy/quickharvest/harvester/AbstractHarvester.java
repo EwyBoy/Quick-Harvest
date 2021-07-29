@@ -33,19 +33,19 @@ public abstract class AbstractHarvester extends Harvester {
             && canPlayerEdit(player, hand, world, pos, state, side)  // The player has permission to edit the block
             && !isHoldingBlacklistedItem(player, hand)
             && (!requiresTool() ||  // No tool is required or
-            player.getHeldItemMainhand().getToolTypes().contains(requiredTool())); // the player is holding the correct tool
+            player.getMainHandItem().getToolTypes().contains(requiredTool())); // the player is holding the correct tool
     }
 
     @Override
     public boolean isHoldingBlacklistedItem(PlayerEntity player, Hand hand) {
-        final ItemStack heldStack = player.getHeldItem(hand);
+        final ItemStack heldStack = player.getItemInHand(hand);
         return config.getBlacklist().contains(heldStack.getItem());
     }
 
     @Override
     public boolean canPlayerEdit(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
-        return world.isBlockLoaded(pos) // Block is loaded
-            && world.isBlockModifiable(player, pos); // Player has permissions to edit the block
+        return world.hasChunkAt(pos) // Block is loaded
+            && world.mayInteract(player, pos); // Player has permissions to edit the block
     }
 
     @Override
@@ -75,7 +75,7 @@ public abstract class AbstractHarvester extends Harvester {
 
     protected void damageTool(PlayerEntity playerEntity, Hand hand, int amount) {
         if (!requiresTool()) return;
-        playerEntity.getHeldItem(hand).damageItem(amount, playerEntity, it -> it.sendBreakAnimation(hand));
+        playerEntity.getItemInHand(hand).hurtAndBreak(amount, playerEntity, it -> it.broadcastBreakEvent(hand));
     }
 
     protected void takeReplantItem(List<ItemStack> drops) {

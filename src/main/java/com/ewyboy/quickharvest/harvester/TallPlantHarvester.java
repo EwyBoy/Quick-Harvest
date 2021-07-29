@@ -40,9 +40,9 @@ public class TallPlantHarvester extends AbstractHarvester {
             if(info.getPos().equals(floodFill.getLowestPoint())) {
                 continue;
             } else {
-                info.getBlockState();
+                info.getState();
             }
-            drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
+            drops.addAll(Block.getDrops(info.getState(), world, info.getPos(), info.getEntity()));
             world.destroyBlock(info.getPos(), false);
         }
 

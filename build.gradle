@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
@@ -33,9 +33,6 @@ minecraft {
         client {
             workingDirectory project.file('run')
             property 'fml.earlyprogresswindow', 'false'
-            arg "-mixin.config=immersiveengineering.mixins.json"
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             mods {
                 quickharvest {
                     source sourceSets.main
@@ -45,8 +42,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             mods {
                 quickharvest {
                     source sourceSets.main
@@ -79,7 +74,6 @@ dependencies {
     minecraft "net.minecraftforge:forge:${MC_VERSION}-${FORGE_VERSION}"
     //implementation fg.deobf("curse.maven:bibliotheca-268210:${BIBLIOTHECA}")
     //implementation fg.deobf("curse.maven:worldstripper-250603:${WORLD_STRIPPER}")
-    //implementation fg.deobf("curse.maven:immersive-engineering-231951:${IE}")
 }
 
 jar {

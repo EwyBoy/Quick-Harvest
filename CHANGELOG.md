@@ -1,3 +1,11 @@
+####**v1.16.5 - 1.4.0**
+* Updated toolchain
+* Bumped forge to new release build
+* Updated mappings to official mojang mappings
+* ForgeGradle 5
+* Gradle 7
+* Java 16 development - Runtime still targets Java 8
+
 ####**v1.16.5 - 1.3.0**
 * Updated toolchain
 * Bumped forge

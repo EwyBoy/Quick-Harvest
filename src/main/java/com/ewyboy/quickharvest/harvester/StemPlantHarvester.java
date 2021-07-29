@@ -30,8 +30,8 @@ public class StemPlantHarvester extends AbstractHarvester {
         final Block block = state.getBlock();
 
         if(block == stem) {
-            final Direction grown = state.get(AttachedStemBlock.FACING);
-            final BlockPos fruitPos = pos.offset(grown);
+            final Direction grown = state.getValue(AttachedStemBlock.FACING);
+            final BlockPos fruitPos = pos.relative(grown);
             final BlockState fruitState = world.getBlockState(fruitPos);
             return breakFruit(player, hand, world, fruitPos, fruitState, grown.getOpposite());
         } else {

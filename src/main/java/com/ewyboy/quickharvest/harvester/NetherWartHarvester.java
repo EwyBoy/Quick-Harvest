@@ -22,9 +22,9 @@ public class NetherWartHarvester extends AbstractHarvester {
 
     @Override
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
-        final List<ItemStack> drops = Block.getDrops(state, world, pos, null, player, player.getHeldItem(hand));
+        final List<ItemStack> drops = Block.getDrops(state, world, pos, null, player, player.getItemInHand(hand));
         world.destroyBlock(pos, false);
-        world.setBlockState(pos, state.with(NetherWartBlock.AGE, 0));
+        world.setBlockAndUpdate(pos, state.setValue(NetherWartBlock.AGE, 0));
         damageTool(player, hand, 1);
         takeReplantItem(drops);
 
@@ -33,7 +33,7 @@ public class NetherWartHarvester extends AbstractHarvester {
 
     @Override
     protected boolean isEffectiveOn(BlockState state) {
-        return state.getBlock() == Blocks.NETHER_WART && state.get(NetherWartBlock.AGE) == 3;
+        return state.getBlock() == Blocks.NETHER_WART && state.getValue(NetherWartBlock.AGE) == 3;
     }
 
 }

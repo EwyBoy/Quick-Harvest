@@ -38,8 +38,8 @@ public class WeepingVineHarvester extends AbstractHarvester {
         for(CachedBlockInfo info : vineBlocks) {
             if(info.getPos().equals(floodFill.getHighestPoint())) {
                 continue;
-            } else {info.getBlockState();}
-            drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
+            } else {info.getState();}
+            drops.addAll(Block.getDrops(info.getState(), world, info.getPos(), info.getEntity()));
             world.destroyBlock(info.getPos(), false);
         }
 

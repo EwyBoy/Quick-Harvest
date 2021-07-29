@@ -24,7 +24,7 @@ public class CocoaHarvester extends AbstractHarvester {
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
         List<ItemStack> drops = Block.getDrops(state, world, pos, null);
         world.destroyBlock(pos, false);
-        world.setBlockState(pos, state.with(CocoaBlock.AGE, 0));
+        world.setBlockAndUpdate(pos, state.setValue(CocoaBlock.AGE, 0));
         damageTool(player, hand, 1);
         takeReplantItem(drops);
 
@@ -33,7 +33,7 @@ public class CocoaHarvester extends AbstractHarvester {
 
     @Override
     protected boolean isEffectiveOn(BlockState state) {
-        return state.getBlock() == Blocks.COCOA && state.get(CocoaBlock.AGE) == 2;
+        return state.getBlock() == Blocks.COCOA && state.getValue(CocoaBlock.AGE) == 2;
     }
 
 }

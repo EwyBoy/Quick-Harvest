@@ -21,8 +21,8 @@ public class FloodFill {
     private BlockPos highestPoint;
 
     public FloodFill(BlockPos origin, Function<BlockState, Direction[]> stateSearchMapper, Set<Predicate<BlockState>> targets) {
-        this.lowestPoint = origin.toImmutable();
-        this.highestPoint = origin.toImmutable();
+        this.lowestPoint = origin.immutable();
+        this.highestPoint = origin.immutable();
         this.stateSearchMapper = s -> Arrays.asList(stateSearchMapper.apply(s));
         this.foundTargets = new HashMap<>();
         targets.forEach(target -> foundTargets.put(target, new HashSet<>()));
@@ -42,21 +42,21 @@ public class FloodFill {
         while(!toVisit.isEmpty()) {
             final BlockPos pos = toVisit.pollLast();
             final CachedBlockInfo blockInfo = new CachedBlockInfo(world, pos, false);
-            final BlockState blockState = blockInfo.getBlockState();
+            final BlockState blockState = blockInfo.getState();
 
             if(blockState == null) continue; // if the block is not loadable
 
             // Add neighbours to search list
-            stateSearchMapper.apply(blockState).forEach(it -> toVisit.push(pos.offset(it)));
+            stateSearchMapper.apply(blockState).forEach(it -> toVisit.push(pos.relative(it)));
             // Add this block to any of the target lists it matches.
             foundTargets.entrySet().stream().filter(it -> it.getKey().test(blockState)).forEach(it -> it.getValue().add(blockInfo));
             // Move lowest and highest point if this is a valid block
 
             if(foundTargets.keySet().stream().anyMatch(it -> it.test(blockState))) {
                 if(pos.getY() < lowestPoint.getY()) {
-                    lowestPoint = pos.toImmutable();
+                    lowestPoint = pos.immutable();
                 } else if(pos.getY() > highestPoint.getY()) {
-                    highestPoint = pos.toImmutable();
+                    highestPoint = pos.immutable();
                 }
             }
         }

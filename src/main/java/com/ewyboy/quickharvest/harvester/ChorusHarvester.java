@@ -37,13 +37,13 @@ public class ChorusHarvester extends AbstractHarvester {
         for(Set<CachedBlockInfo> cachedBlockInfos : floodFill.getFoundTargets().values()) {
             blocksBroken += cachedBlockInfos.size();
             for(CachedBlockInfo info : cachedBlockInfos) {
-                if(info.getBlockState() == null) continue;
-                drops.addAll(Block.getDrops(info.getBlockState(), world, info.getPos(), info.getTileEntity()));
+                if(info.getState() == null) continue;
+                drops.addAll(Block.getDrops(info.getState(), world, info.getPos(), info.getEntity()));
                 world.destroyBlock(info.getPos(), false);
             }
         }
 
-        world.setBlockState(floodFill.getLowestPoint(), Blocks.CHORUS_FLOWER.getDefaultState(), 7);
+        world.setBlock(floodFill.getLowestPoint(), Blocks.CHORUS_FLOWER.defaultBlockState(), 7);
         damageTool(player, hand, blocksBroken);
         takeReplantItem(drops);
 

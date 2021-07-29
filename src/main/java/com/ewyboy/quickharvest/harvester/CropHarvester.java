@@ -30,9 +30,9 @@ public class CropHarvester extends AbstractHarvester {
 
     @Override
     public List<ItemStack> harvest(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side) {
-        final List<ItemStack> drops = Block.getDrops(state, world, pos, null, player, requiresTool() ? player.getHeldItemMainhand() : ItemStack.EMPTY);
+        final List<ItemStack> drops = Block.getDrops(state, world, pos, null, player, requiresTool() ? player.getMainHandItem() : ItemStack.EMPTY);
         world.destroyBlock(pos, false);
-        world.setBlockState(pos, effectiveOn.withAge(0), 7);
+        world.setBlock(pos, effectiveOn.getStateForAge(0), 7);
         damageTool(player, hand, 1);
         takeReplantItem(drops);
 
