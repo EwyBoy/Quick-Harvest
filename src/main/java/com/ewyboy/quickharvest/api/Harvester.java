@@ -7,7 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -69,8 +69,7 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
     protected abstract boolean canPlayerEdit(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side);
 
     protected abstract boolean requiresTool();
-
-    protected abstract ToolType requiredTool();
+    protected abstract ToolAction requiredTool();
 
     protected abstract boolean takesReplantItem();
 

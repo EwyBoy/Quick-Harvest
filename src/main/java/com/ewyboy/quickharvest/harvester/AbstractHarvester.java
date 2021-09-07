@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolType;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public abstract class AbstractHarvester extends Harvester {
     }
 
     @Override
-    public ToolType requiredTool() {
+    public ToolAction requiredTool() {
         return config.getToolType();
     }
 
