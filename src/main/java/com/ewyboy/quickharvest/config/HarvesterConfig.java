@@ -1,18 +1,17 @@
 package com.ewyboy.quickharvest.config;
 
 import com.ewyboy.quickharvest.QuickHarvest;
-import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class HarvesterConfig {
 
@@ -24,7 +23,7 @@ public class HarvesterConfig {
   private final ConfigValue<String> replantItem;
   private final String name;
 
-  public HarvesterConfig(String name, Builder configBuilder, boolean enabled, boolean requiresTool, boolean takeReplantItem, ToolType toolType, String replantDefault, List<Item> harvestBlacklist) {
+  public HarvesterConfig(String name, Builder configBuilder, boolean enabled, boolean requiresTool, boolean takeReplantItem, ToolAction toolType, String replantDefault, List<Item> harvestBlacklist) {
     this.name = name;
     configBuilder.push(name);
 
@@ -51,7 +50,7 @@ public class HarvesterConfig {
         .comment("NOTE: Only works if 'require_tool' is set to true")
         .comment("Recommended values: 'hoe', 'axe', 'shovel', 'pickaxe'")
         .translation(String.format("config.%s.%s.valid_tool_type", QuickHarvest.ID, name))
-        .define("valid_tool_type", toolType == null ? "" : toolType.getName());
+        .define("valid_tool_type", toolType == null ? "" : toolType.name());
 
     this.replantItem = configBuilder
         .comment("The registry name of the item that is required to replant after a quick harvest.")
@@ -90,12 +89,12 @@ public class HarvesterConfig {
     return this.takeReplantItem.get();
   }
 
-  public ToolType getToolType() {
+  public ToolAction getToolType() {
     final String toolType = this.validToolType.get();
     if (toolType.trim().isEmpty()) {
       return null;
     }
-    return ToolType.get(toolType);
+    return ToolAction.get(toolType);
   }
 
   public Item getReplantItem() {

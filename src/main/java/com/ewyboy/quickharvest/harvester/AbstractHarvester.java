@@ -11,7 +11,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolType;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -34,7 +33,7 @@ public abstract class AbstractHarvester extends Harvester {
             && canPlayerEdit(player, hand, world, pos, state, side)  // The player has permission to edit the block
             && !isHoldingBlacklistedItem(player, hand)
             && (!requiresTool() ||  // No tool is required or
-            player.getMainHandItem().getToolTypes().contains(requiredTool())); // the player is holding the correct tool
+            player.getMainHandItem().isCorrectToolForDrops(state)); // the player is holding the correct tool
     }
 
     @Override
@@ -45,7 +44,7 @@ public abstract class AbstractHarvester extends Harvester {
 
     @Override
     public boolean canPlayerEdit(Player player, InteractionHand hand, ServerLevel world, BlockPos pos, BlockState state, Direction side) {
-        return world.hasChunkAt(pos) // Block is loaded
+        return world.isLoaded(pos) // Block is loaded
             && world.mayInteract(player, pos); // Player has permissions to edit the block
     }
 
