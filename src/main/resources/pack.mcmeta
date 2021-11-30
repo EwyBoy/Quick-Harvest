@@ -1,7 +1,6 @@
 {
     "pack": {
         "description": "quickharvest resources",
-        "pack_format": 6,
-        "_comment": "Suck a fat one"
+        "pack_format": 8
     }
 }
