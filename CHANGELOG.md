@@ -1,5 +1,5 @@
 ####**v1.17.1 - 1.5.1**  
-* Fixed #14 - Cactus, sugarcane etc. building consume item.
+* Fixed #14 - Cactus, sugarcane etc. building consume item.  
 
 ####**v1.17.1 - 1.5.0**  
 * Updated to work with forges new tool system  
