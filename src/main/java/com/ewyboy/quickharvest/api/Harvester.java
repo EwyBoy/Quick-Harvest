@@ -66,6 +66,8 @@ public abstract class Harvester extends ForgeRegistryEntry<Harvester> implements
 
     protected abstract boolean isEffectiveOn(BlockState state);
 
+    protected abstract boolean isTryingToBuild(PlayerEntity player, Hand hand, ServerWorld level, BlockPos pos);
+
     protected abstract boolean canPlayerEdit(PlayerEntity player, Hand hand, ServerWorld world, BlockPos pos, BlockState state, Direction side);
 
     protected abstract boolean requiresTool();

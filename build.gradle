@@ -24,8 +24,6 @@ archivesBaseName = MODNAME
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-
 minecraft {
     mappings channel: MCP_CHANNEL, version: MCP_MAPPINGS
 
@@ -102,8 +100,12 @@ curseforge {
         changelog = file('CHANGELOG.md')
         releaseType = "${RELEASE_TYPE}"
         addGameVersion 'Forge'
+        addGameVersion 'Java 8'
         addGameVersion '1.16.5'
         addGameVersion '1.16.4'
+        addGameVersion '1.16.3'
+        addGameVersion '1.16.2'
+        addGameVersion '1.16.1'
         mainArtifact(jar) {
             displayName = "${MODNAME}-${MC_VERSION}-${VERSION}.jar"
         }
