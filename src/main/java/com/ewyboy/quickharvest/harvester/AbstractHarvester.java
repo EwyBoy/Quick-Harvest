@@ -32,8 +32,14 @@ public abstract class AbstractHarvester extends Harvester {
         return isEffectiveOn(state)  // This harvester works on the block
             && canPlayerEdit(player, hand, world, pos, state, side)  // The player has permission to edit the block
             && !isHoldingBlacklistedItem(player, hand)
+            && !isTryingToBuild(player, hand, world, pos)
             && (!requiresTool() ||  // No tool is required or
             player.getMainHandItem().isCorrectToolForDrops(state)); // the player is holding the correct tool
+    }
+
+    @Override
+    public boolean isTryingToBuild(Player player, InteractionHand hand, ServerLevel level, BlockPos pos) {
+        return (player.getItemInHand(hand).is(level.getBlockState(pos).getBlock().asItem()));
     }
 
     @Override
