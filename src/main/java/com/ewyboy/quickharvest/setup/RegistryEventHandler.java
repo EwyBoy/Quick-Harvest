@@ -11,6 +11,7 @@ import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,12 +22,11 @@ public class RegistryEventHandler {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @SubscribeEvent
-    public static void onNewRegistry(final RegistryEvent.NewRegistry event) {
+    public static void onNewRegistry(final NewRegistryEvent event) {
         LOGGER.debug("Creating Harvester Registry");
-        new RegistryBuilder<Harvester>()
-            .setName(new ResourceLocation(QuickHarvest.ID, "harvesters"))
-            .setType(Harvester.class)
-            .create()
+        event.create(new RegistryBuilder<Harvester>()
+                .setName(new ResourceLocation(QuickHarvest.ID, "harvesters"))
+                .setType(Harvester.class))
         ;
     }
 
